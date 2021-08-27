@@ -15,7 +15,7 @@ import ska
 
 
 def load_svo_transmission(filter_id, path=ska.PATH_CACHE):
-    """Load a filter VOTable from SVO Filter Service
+    """Load a filter transmission curve from SVO Filter Service
     http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
 
     Parameters
@@ -23,16 +23,14 @@ def load_svo_transmission(filter_id, path=ska.PATH_CACHE):
     filter_id: str
         The filter unique ID (see SVO filter service)
     path : str
-        The path to a directory in which filters will be stored
+        The path to a directory in which filters are stored
 
     Returns
     =======
     pd.DataFrame
         Filter transmission curve from SVO Filter Profile Service
     """
-    if ~os.path.isfile(ska.PATH_CACHE+'/'+filter_id+'.xml'):
-        _ = get_svo_filter(filter_id)
-    VOFilter = parse(ska.PATH_CACHE+'/'+filter_id+'.xml')
+    VOFilter = load_svo_filter(filter_id)
     trans = pd.DataFrame(data=VOFilter.get_first_table().array.data)
     return trans
 
@@ -45,7 +43,7 @@ def load_svo_filter(filter_id, path=ska.PATH_CACHE):
     filter_id: str
         The filter unique ID (see SVO filter service)
     path : str
-        The path to a directory in which filters will be stored
+        The path to a directory in which filters are stored
 
     Returns
     =======
@@ -108,11 +106,8 @@ def compute_flux(spectrum, filter_id):
         The computed mean flux density
     """
     # Transmission curve
-    if ~os.path.isfile(ska.PATH_CACHE+'/'+filter_id+'.xml'):
-        _ = get_svo_filter(filter_id)
-    VOFilter = parse(ska.PATH_CACHE+'/'+filter_id+'.xml')
-        
-    trans = pd.DataFrame(data=VOFilter.get_first_table().array.data)
+    VOFilter = load_svo_filter(filter_id)
+    trans = load_svo_transmission(filter_id)
 
     # Integration grid is built from the transmission curve
     trans = trans[trans["Transmission"] >= 1e-5]
@@ -120,7 +115,7 @@ def compute_flux(spectrum, filter_id):
     lambda_max = trans["Wavelength"].max()
 
     # Wavelength range to integrate over
-    lambda_int = np.arange(lambda_min, lambda_max, 0.1)
+    lambda_int = np.arange(lambda_min, lambda_max, 0.5)
 
     # Detector type
     # Photon counter
@@ -152,7 +147,7 @@ def compute_flux(spectrum, filter_id):
     return flux
 
 
-def compute_color_ST(spectrum, filter_id_1, filter_id_2):
+def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys='AB', vega=None):
     """Computes filter_1-filter_2 color of spectrum in ST system.
 
     Parameters
@@ -163,61 +158,11 @@ def compute_color_ST(spectrum, filter_id_1, filter_id_2):
         The filter unique ID (see SVO filter service)
     filter_id_2: str
         The filter unique ID (see SVO filter service)
-
-    Returns
-    =======
-    float
-        The requested color
-    """
-    flux1 = compute_flux(spectrum, filter_id_1)
-    flux2 = compute_flux(spectrum, filter_id_2)
-
-    return -2.5*np.log10(flux1/flux2)
-
-
-def compute_color_AB(spectrum, filter_id_1, filter_id_2):
-    """Computes filter_1-filter_2 color of spectrum in AB system.
-
-    Parameters
-    ==========
-    spectrum : pd.DataFrame
-        Source flux density (erg/cm2/s/ang)
-    filter_id_1: str
-        The filter unique ID (see SVO filter service)
-    filter_id_2: str
-        The filter unique ID (see SVO filter service)
-
-    Returns
-    =======
-    float
-        The requested color
-    """
-    flux1 = compute_flux(spectrum, filter_id_1)
-    flux2 = compute_flux(spectrum, filter_id_2)
-
-    VOFilter_1 = parse(ska.PATH_CACHE+'/'+filter_id_1+'.xml')
-    pivot_1 = VOFilter_1.get_field_by_id("WavelengthPivot").value
-
-    VOFilter_2 = parse(ska.PATH_CACHE+'/'+filter_id_2+'.xml')
-    pivot_2 = VOFilter_2.get_field_by_id("WavelengthPivot").value
-
-    return -2.5*np.log10(flux1/flux2) - 5*np.log10(pivot_1/pivot_2)
-
-
-
-def compute_color_Vega(spectrum, filter_id_1, filter_id_2, vega=None):
-    """Computes filter_1-filter_2 color of spectrum in Vega system.
-
-    Parameters
-    ==========
-    spectrum : pd.DataFrame
-        Source flux density (erg/cm2/s/ang)
+    phot_sys : str
+        Photometric system in which to report the color (default=AB)
     vega : pd.DataFrame
         Vega flux density (erg/cm2/s/ang)
-    filter_id_1: str
-        The filter unique ID (see SVO filter service)
-    filter_id_2: str
-        The filter unique ID (see SVO filter service)
+
 
     Returns
     =======
@@ -227,17 +172,32 @@ def compute_color_Vega(spectrum, filter_id_1, filter_id_2, vega=None):
     flux1 = compute_flux(spectrum, filter_id_1)
     flux2 = compute_flux(spectrum, filter_id_2)
 
-    if vega==None:
-        vega = pd.read_csv(ska.PATH_VEGA)
+    if phot_sys=='AB':
+      VOFilter_1 = load_svo_filter(filter_id_1)
+      pivot_1 = VOFilter_1.get_field_by_id("WavelengthPivot").value
+  
+      VOFilter_2 = load_svo_filter(filter_id_2)
+      pivot_2 = VOFilter_2.get_field_by_id("WavelengthPivot").value
+  
+      return -2.5*np.log10(flux1/flux2) - 5*np.log10(pivot_1/pivot_2)
 
-    flux1_vega = compute_flux(vega, filter_id_1)
-    flux2_vega = compute_flux(vega, filter_id_2)
+    elif phot_sys=='Vega':
+      if vega==None:
+          vega = pd.read_csv(ska.PATH_VEGA)
+  
+      flux1_vega = compute_flux(vega, filter_id_1)
+      flux2_vega = compute_flux(vega, filter_id_2)
+  
+      return -2.5 * (np.log10(flux1/flux1_vega) - np.log10(flux2/flux2_vega))
 
-    return -2.5 * (np.log10(flux1 / flux1_vega) - np.log10(flux2 / flux2_vega))
+    elif phot_sys=='ST':
+      return -2.5*np.log10(flux1/flux2)
 
 
 
-def solar_color(filter_id_1, filter_id_2, phot_sys='AB'):
+
+
+def solar_color(filter_id_1, filter_id_2, phot_sys='AB', vega=None):
     """Compute the color of the Sun between two filters
 
     Parameters
@@ -248,43 +208,37 @@ def solar_color(filter_id_1, filter_id_2, phot_sys='AB'):
         The filter unique ID (see SVO filter service)
     phot_sys : str
         Photometric system in which to report the color (default=AB)
+    vega : pd.DataFrame
+        Vega flux density (erg/cm2/s/ang)
 
     Returns
     =======
     dict
-        The solar color and the two reference wavelengths
+        The solar color
     """    
-    file_filter_1 = get_svo_filter(filter_id_1)
-    filter_A = parse(file_filter_1)
+    filter_1 = load_svo_filter(filter_id_1)
+    filter_2 = load_svo_filter(filter_id_2)
     
-    file_filter_2 = get_svo_filter(filter_id_2)
-    filter_B = parse(file_filter_2)
-    
-    sun_A = filter_A.get_field_by_id("Fsun").value
-    sun_B = filter_B.get_field_by_id("Fsun").value
+    sun_1 = filter_1.get_field_by_id("Fsun").value
+    sun_2 = filter_2.get_field_by_id("Fsun").value
 
-    wave_A = filter_A.get_field_by_id("WavelengthEff").value
-    wave_B = filter_B.get_field_by_id("WavelengthEff").value
-
-    mag_A = -2.5*np.log10(sun_A)
-    mag_B = -2.5*np.log10(sun_B)
-    colorST = mag_A-mag_B
+    mag_1 = -2.5*np.log10(sun_1)
+    mag_2 = -2.5*np.log10(sun_2)
+    colorST = mag_1-mag_2
     
     if phot_sys=='ST':
-        #return {'wave_A':wave_A, 'wave_B':wave_B, 'color': colorST}
         return colorST
 
     elif phot_sys=='Vega':
-        spec_vega = pd.read_csv(ska.PATH_VEGA)
-        vega_ST = compute_color_ST(spec_vega, filter_id_1, filter_id_2) 
-        #return {'wave_A':wave_A, 'wave_B':wave_B, 'color': colorST-vega_ST}
+        if vega==None:
+            spec_vega = pd.read_csv(ska.PATH_VEGA)
+        vega_ST = compute_color(spec_vega, filter_id_1, filter_id_2, phot_sys='ST') 
         return (colorST-vega_ST)
 
     else:
-        pivot_1 = filter_A.get_field_by_id("WavelengthPivot").value
-        pivot_2 = filter_B.get_field_by_id("WavelengthPivot").value
-        #return {'wave_A':wave_A, 'wave_B':wave_B, 'color': colorST-5*np.log10(pivot_1/pivot_2)}
-        return (colorST-5*np.log10(pivot_1/pivot_2))
+        pivot_1 = filter_1.get_field_by_id("WavelengthPivot").value
+        pivot_2 = filter_2.get_field_by_id("WavelengthPivot").value
+        return (colorST - 5*np.log10(pivot_1/pivot_2))
 
 
 
