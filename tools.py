@@ -34,6 +34,8 @@ def load_svo_transmission(filter_id, path=ska.PATH_CACHE):
     trans = pd.DataFrame(data=VOFilter.get_first_table().array.data)
     return trans
 
+
+
 def load_svo_filter(filter_id, path=ska.PATH_CACHE):
     """Load a filter VOTable from SVO Filter Service
     http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
@@ -54,7 +56,8 @@ def load_svo_filter(filter_id, path=ska.PATH_CACHE):
         _ = get_svo_filter(filter_id)
     VOFilter = parse(ska.PATH_CACHE+'/'+filter_id+'.xml')
     return VOFilter
- 
+
+
 
 def get_svo_filter(filter_id, path=ska.PATH_CACHE):
     """Retrieve a filter VOTable from SVO Filter Service
@@ -89,14 +92,14 @@ def get_svo_filter(filter_id, path=ska.PATH_CACHE):
 
 
 
-
 def compute_flux(spectrum, filter_id):
     """Computes the flux of a spectrum in a given band.
 
     Parameters
     ----------
     spectrum : pd.DataFrame
-        Flux density (erg/cm2/s/ang)
+        Wavelength: in Angstrom
+        Flux: Flux density (erg/cm2/s/ang)
     filter_id: str
         The filter unique ID (see SVO filter service)
 
@@ -147,6 +150,7 @@ def compute_flux(spectrum, filter_id):
     return flux
 
 
+
 def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys='AB', vega=None):
     """Computes filter_1-filter_2 color of spectrum in ST system.
 
@@ -155,14 +159,15 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys='AB', vega=None):
     spectrum : pd.DataFrame
         Source flux density (erg/cm2/s/ang)
     filter_id_1: str
-        The filter unique ID (see SVO filter service)
+        The first filter unique ID (see SVO filter service)
     filter_id_2: str
-        The filter unique ID (see SVO filter service)
+        The second filter unique ID (see SVO filter service)
     phot_sys : str
         Photometric system in which to report the color (default=AB)
     vega : pd.DataFrame
-        Vega flux density (erg/cm2/s/ang)
-
+        Spectrum of Vega. Columns must be
+        Wavelength: in Angstrom
+        Flux: Flux density (erg/cm2/s/ang)
 
     Returns
     =======
@@ -194,26 +199,25 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys='AB', vega=None):
       return -2.5*np.log10(flux1/flux2)
 
 
-
-
-
 def solar_color(filter_id_1, filter_id_2, phot_sys='AB', vega=None):
     """Compute the color of the Sun between two filters
 
     Parameters
     ==========
     filter_id_1: str
-        The filter unique ID (see SVO filter service)
+        The first filter unique ID (see SVO filter service)
     filter_id_2: str
-        The filter unique ID (see SVO filter service)
+        The second filter unique ID (see SVO filter service)
     phot_sys : str
         Photometric system in which to report the color (default=AB)
     vega : pd.DataFrame
-        Vega flux density (erg/cm2/s/ang)
+        Spectrum of Vega. Columns must be
+        Wavelength: in Angstrom
+        Flux: Flux density (erg/cm2/s/ang)
 
     Returns
     =======
-    dict
+    float
         The solar color
     """    
     filter_1 = load_svo_filter(filter_id_1)
@@ -239,6 +243,4 @@ def solar_color(filter_id_1, filter_id_2, phot_sys='AB', vega=None):
         pivot_1 = filter_1.get_field_by_id("WavelengthPivot").value
         pivot_2 = filter_2.get_field_by_id("WavelengthPivot").value
         return (colorST - 5*np.log10(pivot_1/pivot_2))
-
-
 

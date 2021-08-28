@@ -1,6 +1,9 @@
 # ska - Spectral-Kit for Asteroids
 
-*Disclaimer: in an alpha version and under constant revision*
+Simple function to compute colors from spectra using the
+[SVO Filter Service](http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice)
+in different photometric system: Vega, AB, ST.
+
 
 ## Features
 
