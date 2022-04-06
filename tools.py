@@ -161,7 +161,9 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     Parameters
     ==========
     spectrum : pd.DataFrame
-        Source flux density (erg/cm2/s/ang)
+        Source spectrum. Columns must be
+        Wavelength: in Angstrom
+        Flux: Flux density (erg/cm2/s/ang)
     filter_id_1: str
         The first filter unique ID (see SVO filter service)
     filter_id_2: str
@@ -222,7 +224,9 @@ def reflectance_to_color(
     Parameters
     ==========
     spectrum : pd.DataFrame
-        Source reflectance spectrum (in Angstrom)
+        Source reflectance spectrum. Columns must be
+        Wavelength: in Angstrom
+        Reflectance: arbitrary unit
     filter_id_1: str
         The first filter unique ID (see SVO filter service)
     filter_id_2: str
@@ -268,7 +272,7 @@ def reflectance_to_color(
     interp_sun = interp_sun.astype("float")
 
     # Interpolate reflectance spectru,
-    interpol_spectrum = np.interp(lambda_int, spectrum.Wavelength, spectrum.Flux)
+    interpol_spectrum = np.interp(lambda_int, spectrum.Wavelength, spectrum.Reflectance)
     interp_spectrum = pd.DataFrame(
         {"Wavelength": lambda_int, "Flux": interpol_spectrum * interp_sun.Flux}
     )
