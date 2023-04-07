@@ -263,7 +263,7 @@ def reflectance_to_color(
     lambda_int = np.arange(lambda_min, lambda_max, 0.5)
 
     # Read spectrum othe Sun if not provided
-    if sun == None:
+    if type(sun)!=pd.DataFrame: # == None:
         sun = pd.read_csv(ska.PATH_SUN)
 
     # Interpolate spectrum of the Sun
