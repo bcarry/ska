@@ -326,7 +326,7 @@ def solar_color(filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     # Solar color in Vega photometric system
     elif phot_sys == "Vega":
         # Read Vega spectrum if not provided
-        if vega == None:
+        if not 'vega' in locals():
             spec_vega = pd.read_csv(ska.PATH_VEGA)
 
         # Compute color of Vega
