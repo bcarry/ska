@@ -201,7 +201,7 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     elif phot_sys == "Vega":
 
         # Read Vega spectrum if not provided
-        if vega == None:
+        if not 'vega' in locals():
             vega = pd.read_csv(ska.PATH_VEGA)
 
         # Compute fluxes of Vega in each filter
