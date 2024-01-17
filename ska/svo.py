@@ -5,6 +5,13 @@ import wget
 
 import ska
 
+PATH_FILTERS = os.path.dirname(os.path.abspath(__file__)) + "/../data/svo_filters.txt"
+
+FILTERS = []
+
+with open(PATH_FILTERS, "r") as file:
+    FILTERS = [filt.strip() for filt in file]
+
 
 def download_filter(id):
     """Retrieve a filter VOTable from SVO Filter Service
