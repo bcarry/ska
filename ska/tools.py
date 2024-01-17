@@ -14,60 +14,6 @@ import matplotlib.pyplot as plt
 import ska
 
 
-def compute_flux(spectrum, filter_id):
-    """Computes the flux of a spectrum in a given band.
-
-    Parameters
-    ----------
-    spectrum : pd.DataFrame
-        Wavelength: in Angstrom
-        Flux: Flux density (erg/cm2/s/ang)
-    filter_id: str
-        The filter unique ID (see SVO filter service)
-
-    Returns
-    -------
-    float
-        The computed mean flux density
-    """
-    # Transmission curve
-    VOFilter = load_svo_filter(filter_id)
-    trans = load_svo_transmission(filter_id)
-
-    # Integration grid is built from the transmission curve
-    trans = trans[trans["Transmission"] >= 1e-5]
-    lambda_min = trans["Wavelength"].min()
-    lambda_max = trans["Wavelength"].max()
-
-    # Wavelength range to integrate over
-    lambda_int = np.arange(lambda_min, lambda_max, 0.5)
-
-    # Detector type
-    # Photon counter
-    try:
-        VOFilter.get_field_by_id("DetectorType")
-        factor = lambda_int
-    # Energy counter
-    except:
-        factor = lambda_int * 0 + 1
-
-    # Interpolate over the transmission range
-    interpol_transmission = np.interp(
-        lambda_int, trans["Wavelength"], trans["Transmission"]
-    )
-
-    interpol_spectrum = np.interp(lambda_int, spectrum["Wavelength"], spectrum["Flux"])
-
-    # Compute the flux by integrating over wavelength.
-    nom = np.trapz(
-        interpol_spectrum * interpol_transmission * factor,
-        lambda_int,
-    )
-    denom = np.trapz(interpol_transmission * factor, lambda_int)
-    flux = nom / denom
-    return flux
-
-
 def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     """Computes filter_1-filter_2 color of spectrum in the requested system.
 
