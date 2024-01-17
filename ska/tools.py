@@ -14,93 +14,6 @@ import matplotlib.pyplot as plt
 import ska
 
 
-def load_svo_transmission(filter_id, path=ska.PATH_CACHE):
-    """Load a filter transmission curve from SVO Filter Service
-    http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
-
-    Parameters
-    ==========
-    filter_id: str
-        The filter unique ID (see SVO filter service)
-    path : str
-        The path to a directory in which filters are stored
-
-    Returns
-    =======
-    pd.DataFrame
-        Filter transmission curve from SVO Filter Profile Service
-    """
-    # Load filter VOTable
-    VOFilter = load_svo_filter(filter_id)
-
-    # Return transmission curve
-    return pd.DataFrame(data=VOFilter.get_first_table().array.data)
-
-
-def load_svo_filter(filter_id, path=ska.PATH_CACHE):
-    """Load a filter VOTable from SVO Filter Service
-    http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
-
-    Parameters
-    ==========
-    filter_id: str
-        The filter unique ID (see SVO filter service)
-    path : str
-        The path to a directory in which filters are stored
-
-    Returns
-    =======
-    VOFilter : astropy.io.votable.tree.VOTableFile
-        Filter VOTable from SVO Filter Profile Service
-    """
-    # Download filter VOTable if not present in cache
-    if ~os.path.isfile(ska.PATH_CACHE + "/" + filter_id + ".xml"):
-        _ = get_svo_filter(filter_id)
-
-    # Read, parse, return VOTable
-    VOFilter = parse(ska.PATH_CACHE + "/" + filter_id + ".xml")
-    return VOFilter
-
-
-def get_svo_filter(filter_id, path=ska.PATH_CACHE):
-    """Retrieve a filter VOTable from SVO Filter Service
-    http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
-
-    Parameters
-    ==========
-    filter_id: str
-        The filter unique ID (see SVO filter service)
-    path : str
-        The path to a directory in which filters will be stored
-
-    Returns
-    =======
-    str
-        The path to the filter
-    """
-
-    # SVO Base URL for queries
-    url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?ID={filter_id}"
-
-    # Parse filter name
-    parts = filter_id.split("/")
-    if len(parts) > 1:
-        rep = path + "/" + parts[0] + "/"
-        name = parts[1]
-    else:
-        rep = path + "/"
-        name = filter_id
-    out = rep + name + ".xml"
-
-    # Create directory and download VOTable
-    if not os.path.isfile(out):
-        pathlib.Path(rep).mkdir(parents=True, exist_ok=True)
-        wget.download(url, out=out)
-
-    # Return path to filter VOTable
-    return out
-
-
 def compute_flux(spectrum, filter_id):
     """Computes the flux of a spectrum in a given band.
 
@@ -199,9 +112,8 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
 
     # Magnitude in Vega photometric system
     elif phot_sys == "Vega":
-
         # Read Vega spectrum if not provided
-        if not 'vega' in locals():
+        if not "vega" in locals():
             vega = pd.read_csv(ska.PATH_VEGA)
 
         # Compute fluxes of Vega in each filter
@@ -263,7 +175,7 @@ def reflectance_to_color(
     lambda_int = np.arange(lambda_min, lambda_max, 0.5)
 
     # Read spectrum othe Sun if not provided
-    if type(sun)!=pd.DataFrame: # == None:
+    if type(sun) != pd.DataFrame:  # == None:
         sun = pd.read_csv(ska.PATH_SUN)
 
     # Interpolate spectrum of the Sun
@@ -326,7 +238,7 @@ def solar_color(filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     # Solar color in Vega photometric system
     elif phot_sys == "Vega":
         # Read Vega spectrum if not provided
-        if not 'vega' in locals():
+        if not "vega" in locals():
             spec_vega = pd.read_csv(ska.PATH_VEGA)
 
         # Compute color of Vega
