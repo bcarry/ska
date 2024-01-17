@@ -1,0 +1,21 @@
+[project]
+name = "ska"
+version = "0.1"
+dependencies = [
+  "wget",
+  "pandas",
+  "numpy",
+  "astropy",
+  "matplotlib"
+]
+requires-python = ">=3.8"
+description = "Spectral-Kit for Asteroids"
+
+[build-system]
+build-backend = 'setuptools.build_meta'
+requires = [
+    'setuptools',
+]
+
+[tool.setuptools]
+packages= ['ska']
