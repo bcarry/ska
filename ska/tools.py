@@ -2,19 +2,13 @@
 """
 Spectral conversion tools
 """
-import wget
-import pathlib
-import os.path
-
 import pandas as pd
 import numpy as np
-from astropy.io.votable import parse, parse_single_table
-import matplotlib.pyplot as plt
 
 import ska
 
 
-def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
+def compute_color(spectrum, filter1, filter2, phot_sys="AB", vega=None):
     """Computes filter_1-filter_2 color of spectrum in the requested system.
 
     Parameters
@@ -23,10 +17,8 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
         Source spectrum. Columns must be
         Wavelength: in Angstrom
         Flux: Flux density (erg/cm2/s/ang)
-    filter_id_1: str
-        The first filter unique ID (see SVO filter service)
-    filter_id_2: str
-        The second filter unique ID (see SVO filter service)
+    filter_1: ska.Filter
+    filter_2: ska.Filter
     phot_sys : str
         Photometric system in which to report the color (default=AB)
     vega : pd.DataFrame
@@ -41,17 +33,14 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     """
 
     # Compute fluxes in each filter
-    flux1 = compute_flux(spectrum, filter_id_1)
-    flux2 = compute_flux(spectrum, filter_id_2)
+    flux1 = filter1.compute_flux(spectrum)
+    flux2 = filter2.compute_flux(spectrum)
 
     # Magnitude in AB photometric system
     if phot_sys == "AB":
         # Get Pivot wavelength for both filters
-        VOFilter_1 = load_svo_filter(filter_id_1)
-        pivot_1 = VOFilter_1.get_field_by_id("WavelengthPivot").value
-
-        VOFilter_2 = load_svo_filter(filter_id_2)
-        pivot_2 = VOFilter_2.get_field_by_id("WavelengthPivot").value
+        pivot_1 = filter1.VOFilter.get_field_by_id("WavelengthPivot").value
+        pivot_2 = filter2.VOFilter.get_field_by_id("WavelengthPivot").value
 
         # Compute and return the color
         return -2.5 * np.log10(flux1 / flux2) - 5 * np.log10(pivot_1 / pivot_2)
@@ -59,12 +48,12 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     # Magnitude in Vega photometric system
     elif phot_sys == "Vega":
         # Read Vega spectrum if not provided
-        if not "vega" in locals():
+        if "vega" not in locals():
             vega = pd.read_csv(ska.PATH_VEGA)
 
         # Compute fluxes of Vega in each filter
-        flux1_vega = compute_flux(vega, filter_id_1)
-        flux2_vega = compute_flux(vega, filter_id_2)
+        flux1_vega = filter1.compute_flux(vega)
+        flux2_vega = filter2.compute_flux(vega)
 
         # Compute and return the color
         return -2.5 * (np.log10(flux1 / flux1_vega) - np.log10(flux2 / flux2_vega))
@@ -75,7 +64,7 @@ def compute_color(spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None):
 
 
 def reflectance_to_color(
-    spectrum, filter_id_1, filter_id_2, phot_sys="AB", vega=None, sun=None
+    spectrum, filter1, filter2, phot_sys="AB", vega=None, sun=None
 ):
     """Computes filter_1-filter_2 color for a reflectance spectrum.
 
@@ -85,10 +74,8 @@ def reflectance_to_color(
         Source reflectance spectrum. Columns must be
         Wavelength: in Angstrom
         Reflectance: arbitrary unit
-    filter_id_1: str
-        The first filter unique ID (see SVO filter service)
-    filter_id_2: str
-        The second filter unique ID (see SVO filter service)
+    filter_1: ska.Filter
+    filter_2: ska.Filter
     phot_sys : str
         Photometric system in which to report the color (default=AB)
     vega : pd.DataFrame
@@ -106,16 +93,9 @@ def reflectance_to_color(
         The requested color
     """
 
-    # Define wavelength interval
-    # Transmission curves
-    trans_1 = load_svo_transmission(filter_id_1)
-    trans_2 = load_svo_transmission(filter_id_2)
-
     # Integration grid is built from the transmission curve
-    trans_1 = trans_1[trans_1["Transmission"] >= 1e-5]
-    trans_2 = trans_2[trans_2["Transmission"] >= 1e-5]
-    lambda_min = np.min([trans_1["Wavelength"].min(), trans_2["Wavelength"].min()])
-    lambda_max = np.max([trans_1["Wavelength"].max(), trans_2["Wavelength"].max()])
+    lambda_min = np.min([filter1.wave.min(), filter2.wave.min()])
+    lambda_max = np.max([filter1.wave.max(), filter2.wave.max()])
 
     # Wavelength range to integrate over
     lambda_int = np.arange(lambda_min, lambda_max, 0.5)
@@ -138,11 +118,11 @@ def reflectance_to_color(
 
     # Compute color of the reflectance*Sun spectrum
     return compute_color(
-        interp_spectrum, filter_id_1, filter_id_2, phot_sys=phot_sys, vega=vega
+        interp_spectrum, filter1, filter2, phot_sys=phot_sys, vega=vega
     )
 
 
-def solar_color(filter_id_1, filter_id_2, phot_sys="AB", vega=None):
+def solar_color(filter1, filter2, phot_sys="AB", vega=None):
     """Compute the color of the Sun between two filters
 
     Parameters
@@ -164,13 +144,9 @@ def solar_color(filter_id_1, filter_id_2, phot_sys="AB", vega=None):
         The solar color
     """
 
-    # Load filters VOTable
-    filter_1 = load_svo_filter(filter_id_1)
-    filter_2 = load_svo_filter(filter_id_2)
-
     # Exrtract Solar Fluxes
-    sun_1 = filter_1.get_field_by_id("Fsun").value
-    sun_2 = filter_2.get_field_by_id("Fsun").value
+    sun_1 = filter1.VOFilter.get_field_by_id("Fsun").value
+    sun_2 = filter2.VOFilter.get_field_by_id("Fsun").value
 
     # Convert to magnitude
     mag_1 = -2.5 * np.log10(sun_1)
@@ -184,15 +160,15 @@ def solar_color(filter_id_1, filter_id_2, phot_sys="AB", vega=None):
     # Solar color in Vega photometric system
     elif phot_sys == "Vega":
         # Read Vega spectrum if not provided
-        if not "vega" in locals():
+        if "vega" not in locals():
             spec_vega = pd.read_csv(ska.PATH_VEGA)
 
         # Compute color of Vega
-        vega_ST = compute_color(spec_vega, filter_id_1, filter_id_2, phot_sys="ST")
+        vega_ST = compute_color(spec_vega, filter1, filter2, phot_sys="ST")
         return colorST - vega_ST
 
     # Solar color in ST photometric system
     else:
-        pivot_1 = filter_1.get_field_by_id("WavelengthPivot").value
-        pivot_2 = filter_2.get_field_by_id("WavelengthPivot").value
+        pivot_1 = filter1.VOFilter.get_field_by_id("WavelengthPivot").value
+        pivot_2 = filter2.VOFilter.get_field_by_id("WavelengthPivot").value
         return colorST - 5 * np.log10(pivot_1 / pivot_2)
