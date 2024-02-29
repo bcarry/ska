@@ -129,13 +129,11 @@ def compute_flux(spectrum, filter_id):
     # Wavelength range to integrate over
     lambda_int = np.arange(lambda_min, lambda_max, 0.5)
 
-    # Detector type
     # Photon counter
-    try:
-        VOFilter.get_field_by_id("DetectorType")
+    if (VOFilter.get_field_by_id("DetectorType").value=='1'):
         factor = lambda_int
     # Energy counter
-    except:
+    else:
         factor = lambda_int * 0 + 1
 
     # Interpolate over the transmission range
