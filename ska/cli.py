@@ -6,7 +6,9 @@ import click
 import rich
 
 import ska
+import ska.tools as skatools
 
+import pandas as pd
 
 @click.group()
 @click.version_option(version=ska.__version__, message="%(version)s")
@@ -52,3 +54,32 @@ def filter():
     except IndexError:  # no choice was made, c-c c-c
         sys.exit()
     return choice
+
+
+
+
+@cli_ska.command()
+@click.argument('file')
+@click.argument('filter1')
+@click.argument('filter2')
+@click.option('--phot_sys', default='AB', help='Photometric system (Vega | ST | AB)')
+def color(file, filter1, filter2, phot_sys):
+    """Compute the color between two filters"""
+
+    f_1 = ska.Filter( filter1 )
+    f_2 = ska.Filter( filter2 )
+
+    spectrum = pd.read_csv( file )
+    color = skatools.compute_color( spectrum, f_1, f_2, phot_sys=phot_sys)
+    #click.echo(f"{ file} {filter1} {filter2} {phot_sys}")
+    click.echo(f"{color:4.2f}")
+
+
+@cli_ska.command()
+@click.option('--count', default=1, help='number of greetings')
+@click.argument('name')
+def hello(count, name):
+    for x in range(count):
+        click.echo(f"Hello {name}!")
+
+

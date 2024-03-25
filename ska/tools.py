@@ -48,9 +48,9 @@ def compute_color(spectrum, filter1, filter2, phot_sys="AB", vega=None):
     # Magnitude in Vega photometric system
     elif phot_sys == "Vega":
         # Read Vega spectrum if not provided
-        if "vega" not in locals():
+        if vega is None:
             vega = pd.read_csv(ska.PATH_VEGA)
-            vega.Wavelength /= 10000
+            #vega.Wavelength /= 10000
 
         # Compute fluxes of Vega in each filter
         flux1_vega = filter1.compute_flux(vega)
@@ -99,7 +99,7 @@ def reflectance_to_color(
     lambda_max = np.max([filter1.wave.max(), filter2.wave.max()])
 
     # Wavelength range to integrate over
-    lambda_int = np.arange(lambda_min, lambda_max, 0.5)
+    lambda_int = np.arange(lambda_min, lambda_max, 0.0005)
 
     # Read spectrum othe Sun if not provided
     if type(sun) != pd.DataFrame:  # == None:
