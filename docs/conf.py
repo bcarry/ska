@@ -41,7 +41,7 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
-    "hoverxref.extension",
+    #"hoverxref.extension",
     "sphinx_design",
     "sphinx_copybutton",
 ]
@@ -73,7 +73,7 @@ graphviz_output_format = "svg"
 
 hoverxref_roles = ["numref", "confval", "setting", "term"]
 
-hoverxref_project = "rocks"
+hoverxref_project = "ska"
 hoverxref_version = "latest"
 
 # -- Options for HTML output -------------------------------------------------
@@ -85,7 +85,7 @@ hoverxref_version = "latest"
 # html_theme_path = [sphinx_redactor_theme.get_html_theme_path()]
 html_theme = "furo"
 html_static_path = ["_static"]
-# html_logo = "gfx/logo_rocks.svg"
+# html_logo = "gfx/logo_ska.svg"
 
 pygments_style = "monokai"
 pygments_dark_style = "monokai"
@@ -98,8 +98,8 @@ html_theme_options = {
     "sidebar_hide_name": True,
     "navigation_with_keys": True,
     "top_of_page_button": None,
-    #"light_logo": "logo_rocks.svg",
-    #"dark_logo": "logo_rocks_light.svg",
+    #"light_logo": "logo_ska.svg",
+    #"dark_logo": "logo_ska_light.svg",
     # "logo_only": True,
     # "display_version": True,
     # "prev_next_buttons_location": "bottom",
