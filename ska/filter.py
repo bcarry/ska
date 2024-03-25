@@ -55,7 +55,7 @@ class Filter:
         """
 
         # Wavelength range to integrate over
-        lambda_int = np.arange(self.wave.min(), self.wave.max(), 0.5)
+        lambda_int = np.arange(self.wave.min(), self.wave.max(), 0.0005)
 
         # Detector type
         # Photon counter
@@ -82,3 +82,4 @@ class Filter:
         denom = np.trapz(interpol_transmission * factor, lambda_int)
         flux = nom / denom
         return flux
+
