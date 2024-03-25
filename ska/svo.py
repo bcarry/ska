@@ -1,11 +1,13 @@
+import io
 import os
-import pathlib
-
-import wget
+import requests
+from astropy.io.votable import parse
 
 import ska
 
-PATH_FILTERS = os.path.dirname(os.path.abspath(__file__)) + "/../data/svo_filters.txt"
+PATH_FILTERS = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
+)
 
 FILTERS = []
 
@@ -14,37 +16,50 @@ with open(PATH_FILTERS, "r") as file:
 
 
 def download_filter(id):
-    """Retrieve a filter VOTable from SVO Filter Service
+    """Download a filter VOTable from SVO Filter Service
     http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
 
     Parameters
     ==========
-    path : str
-        The path to a directory in which filters will be stored
+    id : str
+        The unique SVO filter identifier
 
     Returns
     =======
     str
-        The path to the filter
+        The path to the filter VOTable file
     """
 
-    # SVO Base URL for queries
-    url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?ID={id}"
+    # Test if the filter ID is valid
+    # TBD
 
-    # Parse filter name
+    # SVO Base URL for queries
+    url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"
+
+    # Output name for the filter VOTable
     parts = id.split("/")
     if len(parts) > 1:
-        rep = ska.PATH_CACHE + "/" + parts[0] + "/"
+        rep = os.path.join(ska.PATH_CACHE, parts[0])
         name = parts[1]
     else:
-        rep = ska.PATH_CACHE + "/"
+        rep = ska.PATH_CACHE
         name = id
-    out = rep + name + ".xml"
+    out = os.path.join(rep, name + ".xml")
 
-    # Create directory and download VOTable
+    # Download VOTable
     if not os.path.isfile(out):
-        pathlib.Path(rep).mkdir(parents=True, exist_ok=True)
-        wget.download(url, out=out)
+        try:
+            # Request the filter VOTable
+            r = requests.get(url, params={"ID": id})
+            SVOFilter = parse(io.BytesIO(r.content))
+            filter_info = SVOFilter.get_first_table()
+
+            # Write it to disk
+            os.makedirs(rep, exist_ok=True)
+            SVOFilter.to_xml(out)
+
+        except:
+            raise Exception("Error downloading filter VOTable")
 
     # Return path to filter VOTable
     return out
