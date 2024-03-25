@@ -42,8 +42,8 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
     #"hoverxref.extension",
-    "sphinx_design",
-    "sphinx_copybutton",
+    #"sphinx_design",
+    #"sphinx_copybutton",
 ]
 
 # Print out todos in documentation?
