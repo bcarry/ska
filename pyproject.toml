@@ -26,6 +26,9 @@ docs = [
   "spinx_design"
 ]
 
+[tool.poetry.scripts]
+ska = "ska.cli:cli_ska"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -23,7 +23,7 @@ copyright = "2024, Benoit Carry"
 author = "Benoit Carry"
 
 # The full version, including alpha/beta/rc tags
-release = "0.1"
+release = "alpha"
 html_title = "ska"
 
 
@@ -41,9 +41,9 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
-    #"hoverxref.extension",
-    #"sphinx_design",
-    #"sphinx_copybutton",
+    "hoverxref.extension",
+    "sphinx_design",
+    "sphinx_copybutton",
 ]
 
 # Print out todos in documentation?
@@ -83,8 +83,8 @@ hoverxref_version = "latest"
 #
 # html_theme = "sphinx_redactor_theme"
 # html_theme_path = [sphinx_redactor_theme.get_html_theme_path()]
-html_theme = "sphinx_rtd_theme"
-# html_static_path = ["_static"]
+html_theme = "furo"
+html_static_path = ["_static"]
 # html_logo = "gfx/logo_ska.svg"
 
 pygments_style = "monokai"

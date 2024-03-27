@@ -1,5 +1,5 @@
 #########
-``ska``
+``ska: a Spectral Kit for Asteroids``
 #########
 
 .. raw:: html
