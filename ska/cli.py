@@ -73,13 +73,3 @@ def color(file, filter1, filter2, phot_sys):
     color = skatools.compute_color( spectrum, f_1, f_2, phot_sys=phot_sys)
     #click.echo(f"{ file} {filter1} {filter2} {phot_sys}")
     click.echo(f"{color:4.2f}")
-
-
-@cli_ska.command()
-@click.option('--count', default=1, help='number of greetings')
-@click.argument('name')
-def hello(count, name):
-    for x in range(count):
-        click.echo(f"Hello {name}!")
-
-
