@@ -1,26 +1,31 @@
-[project]
+[tool.poetry]
 name = "ska"
-version = "0.1"
-dependencies = [
-  "wget",
-  "pandas",
-  "numpy",
-  "astropy",
-  "matplotlib",
-  "click",
-  "rich"
-]
-requires-python = ">=3.8"
+version = "0.1.1"
 description = "Spectral-Kit for Asteroids"
+authors = ["Benoit Carry <benoit.carry@oca.eu>", "Max Mahlke"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.31.0"
+pandas = "^2.2.1"
+click = "^8.1.7"
+rich = "^13.7.1"
+astropy = "^6.0.1"
+numpy = "^1.26.4"
+
+
+[tool.poetry.extras]
+docs = [
+  "furo",
+  "sphinx",
+  "sphinx-copybutton",
+  "sphinx-hoverxref",
+  "sphinx-redactor-theme",
+  "spinx_design"
+]
 
 [build-system]
-build-backend = 'setuptools.build_meta'
-requires = [
-    'setuptools',
-]
-
-[project.scripts]
-ska = "ska.cli:cli_ska"
-
-[tool.setuptools]
-packages= ['ska']
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
