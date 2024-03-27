@@ -1,5 +1,6 @@
-from pathlib import Path
+#from pathlib import Path
 
+import os
 from astropy.io.votable import parse
 import numpy as np
 import pandas as pd
@@ -21,10 +22,10 @@ class Filter:
             raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
 
         self.id = id
-        self.path = Path(ska.PATH_CACHE) / f"{self.id}.xml"
+        self.path = os.path.join(ska.PATH_CACHE , f"{self.id}.xml" )
 
         # Download if not cached
-        if not self.path.is_file():
+        if not os.path.isfile(self.path):
             ska.svo.download_filter(self.id)
 
         # Parse filter response
