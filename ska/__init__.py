@@ -1,4 +1,5 @@
 """Spectral-Kit for Asteroids."""
+
 from .filter import Filter  # noqa
 from . import svo  # noqa
 

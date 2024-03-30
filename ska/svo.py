@@ -15,6 +15,19 @@ with open(PATH_FILTERS, "r") as file:
     FILTERS = [filt.strip() for filt in file]
 
 
+def get_filter_list():
+    """Retrieve the list of filter IDs from SVO Filter Service
+    http://svo2.cab.inta-csic.es/theory/fps/
+
+    Returns
+    =======
+    list
+        The list of filter IDS
+    """
+
+    return 0
+
+
 def download_filter(id):
     """Download a filter VOTable from SVO Filter Service
     http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
@@ -38,14 +51,7 @@ def download_filter(id):
     url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"
 
     # Output name for the filter VOTable
-    parts = id.split("/")
-    if len(parts) > 1:
-        rep = os.path.join(ska.PATH_CACHE, parts[0])
-        name = parts[1]
-    else:
-        rep = ska.PATH_CACHE
-        name = id
-    out = os.path.join(rep, name + ".xml")
+    out = os.path.join(ska.PATH_CACHE, id.replace("/", "_") + ".xml")
 
     # Download VOTable
     if not os.path.isfile(out):
@@ -56,7 +62,7 @@ def download_filter(id):
             filter_info = SVOFilter.get_first_table()
 
             # Write it to disk
-            os.makedirs(rep, exist_ok=True)
+            os.makedirs(ska.PATH_CACHE, exist_ok=True)
             SVOFilter.to_xml(out)
 
         except:

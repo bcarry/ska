@@ -1,4 +1,4 @@
-#from pathlib import Path
+# from pathlib import Path
 
 import os
 from astropy.io.votable import parse
@@ -22,7 +22,8 @@ class Filter:
             raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
 
         self.id = id
-        self.path = os.path.join(ska.PATH_CACHE , f"{self.id}.xml" )
+        # self.path = os.path.join(ska.PATH_CACHE , f"{self.id}.xml" )
+        self.path = os.path.join(ska.PATH_CACHE, f"{self.id.replace('/','_')}.xml")
 
         # Download if not cached
         if not os.path.isfile(self.path):
@@ -83,4 +84,3 @@ class Filter:
         denom = np.trapz(interpol_transmission * factor, lambda_int)
         flux = nom / denom
         return flux
-
