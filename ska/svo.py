@@ -67,7 +67,8 @@ def download_filter(id):
     # Test if the filter ID is valid
     FILTERS = load_filter_list()
     if id not in FILTERS:
-        raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
+        raise ValueError(f"Unknown filter ID {id}. Choose from\n {FILTERS}")
+        #raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
 
     # SVO Base URL for queries
     url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"
