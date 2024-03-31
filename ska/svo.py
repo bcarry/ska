@@ -5,17 +5,17 @@ from astropy.io.votable import parse
 
 import ska
 
-PATH_FILTERS = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
-)
+#PATH_FILTERS = os.path.join(
+#    os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
+#)
+#
+#FILTERS = []
+#
+#with open(PATH_FILTERS, "r") as file:
+#    FILTERS = [filt.strip() for filt in file]
 
-FILTERS = []
 
-with open(PATH_FILTERS, "r") as file:
-    FILTERS = [filt.strip() for filt in file]
-
-
-def get_filter_list():
+def download_filter_list():
     """Retrieve the list of filter IDs from SVO Filter Service
     http://svo2.cab.inta-csic.es/theory/fps/
 
@@ -25,7 +25,28 @@ def get_filter_list():
         The list of filter IDS
     """
 
-    return 0
+    # TBD download file
+    # place it in cache directory
+    return False
+
+
+def load_filter_list():
+    """Read all filter IDs from a cache list
+
+    Returns
+    =======
+    list
+        The list of filter IDS
+    """
+    
+    # TBD: replace with file in cache
+    PATH_FILTERS = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
+    )
+
+    with open(PATH_FILTERS, "r") as file:
+        FILTERS = [filt.strip() for filt in file]
+    return FILTERS
 
 
 def download_filter(id):
@@ -44,6 +65,7 @@ def download_filter(id):
     """
 
     # Test if the filter ID is valid
+    FILTERS = load_filter_list()
     if id not in FILTERS:
         raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
 

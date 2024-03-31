@@ -18,11 +18,12 @@ class Filter:
             The filter unique ID (see SVO filter service)
         """
 
-        if id not in ska.svo.FILTERS:
-            raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
+        # Test validity of filters
+        FILTERS = ska.svo.load_filter_list()
+        if id not in FILTERS:
+            raise ValueError(f"Unknown filter ID {id}. Choose from\n {FILTERS}")
 
         self.id = id
-        # self.path = os.path.join(ska.PATH_CACHE , f"{self.id}.xml" )
         self.path = os.path.join(ska.PATH_CACHE, f"{self.id.replace('/','_')}.xml")
 
         # Download if not cached
@@ -61,12 +62,10 @@ class Filter:
 
         # Detector type
         # Photon counter
-        try:
-            self.VOFilter.get_field_by_id("DetectorType")
+        if self.VOFilter.get_field_by_id("DetectorType")==1:
             factor = lambda_int
         # Energy counter
-        except:
-            # TODO: Catch specific error here
+        else:
             factor = lambda_int * 0 + 1
 
         # Interpolate over the transmission range
