@@ -42,6 +42,11 @@ def take_inventory():
     return cached_ids, cached_xmls
 
 
+def update_filter_list():
+    # TBD doc / handle issue
+    ska.svo.download_filter_list
+
+
 def update_filters(ids):
     """Update the cached filters (VOTable files).
 

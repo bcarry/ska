@@ -25,9 +25,22 @@ def download_filter_list():
         The list of filter IDS
     """
 
-    # TBD download file
-    # place it in cache directory
-    return False
+    try:
+        
+        # Request SVO filter list
+        r = requests.get('https://svo.cab.inta-csic.es/files/svo/Public/HowTo/FPS/FPS_info.xml')
+        SVOFilters = parse(io.BytesIO(r.content))
+        filter_info = SVOFilters.get_first_table().to_table().to_pandas()
+
+        # Write it to disk
+        # filter_info.to_csv(os.path.join(ska.PATH_CACHE, "svo_filters.csv"), index=False)
+        filter_info['filterID'].to_csv(os.path.join(ska.PATH_CACHE, "svo_filters.txt"), index=False)
+        return True
+    
+    except:
+        raise Exception("Error downloading filter list")
+        return False
+    
 
 
 def load_filter_list():
@@ -40,9 +53,10 @@ def load_filter_list():
     """
     
     # TBD: replace with file in cache
-    PATH_FILTERS = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
-    )
+    # PATH_FILTERS = os.path.join(
+    #     os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
+    # )
+    PATH_FILTERS = os.path.join(ska.PATH_CACHE, "svo_filters.txt"
 
     with open(PATH_FILTERS, "r") as file:
         FILTERS = [filt.strip() for filt in file]
