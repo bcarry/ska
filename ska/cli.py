@@ -1,3 +1,5 @@
+
+import os
 import shutil
 import subprocess
 import sys
@@ -34,6 +36,11 @@ def status(clear, update):
     from rich import prompt
 
     from ska import cache
+
+    # ------
+    # Check filter list
+    if not os.path.isfile(ska.PATH_FILTER_LIST):
+        ska.svo.download_filter_list()
 
     # ------
     # Echo inventory

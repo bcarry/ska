@@ -23,5 +23,7 @@ PATH_SUN = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "data", "hst_sun.csv"
 )
 
+PATH_FILTER_LIST = os.path.join(PATH_CACHE, "svo_filters.txt")
+
 # Check for existence of index file and cache directory
 os.makedirs(PATH_CACHE, exist_ok=True)
