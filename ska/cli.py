@@ -1,7 +1,4 @@
-
 import os
-import shutil
-import subprocess
 import sys
 
 import click
@@ -10,7 +7,6 @@ import rich
 import ska
 import ska.tools as skatools
 
-import pandas as pd
 
 
 @click.group()
@@ -85,6 +81,9 @@ def status(clear, update):
 def id():
     """Fuzzy-search SVO filter index."""
 
+    import shutil
+    import subprocess
+
     PATH_EXECUTABLE = shutil.which("fzf")
 
     if PATH_EXECUTABLE is None:
@@ -126,18 +125,27 @@ def id():
 @click.argument("file")
 @click.argument("filter1")
 @click.argument("filter2")
-@click.option("--phot_sys", default="AB", help="Photometric system (Vega | ST | AB)")
-def color(file, filter1, filter2, phot_sys):
+@click.option("--phot_sys", default="Vega", help="Photometric system ([green]Vega[/green] | ST | AB)")
+@click.option('--reflectance', '-r', is_flag=True, default=False, help="Multiply the input reflectance by Solar spectrum.")
+def color(file, filter1, filter2, phot_sys, reflectance):
     """Compute the color between two filters"""
 
+    import pandas as pd
 
     # TBD: interactive selection filters with fzf
 
+    # Load filters
     f_1 = ska.Filter(filter1)
     f_2 = ska.Filter(filter2)
 
-    spectrum = pd.read_csv(file)
-    color = skatools.compute_color(spectrum, f_1, f_2, phot_sys=phot_sys)
+    # Read spectrum
+    spectrum = ska.Spectrum(file)
+
+    # Compute color
+    if reflectance:
+        color = skatools.reflectance_to_color(spectrum, f_1, f_2, phot_sys=phot_sys)
+    else:
+        color = skatools.compute_color(spectrum, f_1, f_2, phot_sys=phot_sys)
     click.echo(f"{color:4.2f}")
 
 

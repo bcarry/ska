@@ -2,6 +2,7 @@ import io
 import os
 import requests
 from astropy.io.votable import parse
+import rich
 
 import ska
 
@@ -40,9 +41,10 @@ def download_filter_list():
         return True
 
     except:
-        raise Exception("Error downloading filter list")
+        # raise Exception("Error downloading filter list")
+        rich.print(f"[red]Error downloading filter {id} VOTable[/red].")
         return False
-
+        
 
 def load_filter_list():
     """Read all filter IDs from a cache list
@@ -79,7 +81,9 @@ def download_filter(id):
     # Test if the filter ID is valid
     FILTERS = load_filter_list()
     if id not in FILTERS:
-        raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
+        rich.print(f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] to list available filters")
+        sys.exit(1)
+        # raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
 
     # SVO Base URL for queries
     url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"
@@ -100,7 +104,9 @@ def download_filter(id):
             SVOFilter.to_xml(out)
 
         except:
-            raise Exception("Error downloading filter VOTable")
+            rich.print(f"[red]Error downloading filter {id} VOTable[/red].")
+            sys.exit(1)
+            # raise Exception("Error downloading filter VOTable")
 
     # Return path to filter VOTable
     return out

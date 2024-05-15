@@ -72,7 +72,7 @@ def reflectance_to_color(
     ==========
     spectrum : pd.DataFrame
         Source reflectance spectrum. Columns must be
-        Wavelength: in Angstrom
+        Wavelength: in microns
         Reflectance: arbitrary unit
     filter_1: ska.Filter
     filter_2: ska.Filter
@@ -101,7 +101,7 @@ def reflectance_to_color(
     lambda_int = np.arange(lambda_min, lambda_max, 0.0005)
 
     # Read spectrum othe Sun if not provided
-    if type(sun) != pd.DataFrame:  # == None:
+    if not isinstance(sun, pd.DataFrame):  
         sun = pd.read_csv(ska.PATH_SUN)
 
     # Interpolate spectrum of the Sun
@@ -109,8 +109,8 @@ def reflectance_to_color(
     interp_sun = pd.DataFrame({"Wavelength": lambda_int, "Flux": interpol_spectrum})
     interp_sun = interp_sun.astype("float")
 
-    # Interpolate reflectance spectru,
-    interpol_spectrum = np.interp(lambda_int, spectrum.Wavelength, spectrum.Reflectance)
+    # Interpolate reflectance spectrum
+    interpol_spectrum = np.interp(lambda_int, spectrum.Wavelength, spectrum.Flux)
     interp_spectrum = pd.DataFrame(
         {"Wavelength": lambda_int, "Flux": interpol_spectrum * interp_sun.Flux}
     )

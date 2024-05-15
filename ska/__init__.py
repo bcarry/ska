@@ -1,6 +1,7 @@
 """Spectral-Kit for Asteroids."""
 
 from .filter import Filter  # noqa
+from .spectrum import Spectrum  # noqa
 from . import svo  # noqa
 
 import os
@@ -15,7 +16,7 @@ __version__ = "alpha"
 PATH_CACHE = os.path.join(os.path.expanduser("~"), ".cache/ska")
 os.makedirs(PATH_CACHE, exist_ok=True)
 
-# SKA Auxliary data
+# SKA Auxiliary data
 PATH_VEGA = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "..",

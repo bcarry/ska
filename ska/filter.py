@@ -1,12 +1,16 @@
 import os
+import sys
 from astropy.io.votable import parse
 import numpy as np
 import pandas as pd
+
+import rich
 
 import ska
 
 
 class Filter:
+    # --------------------------------------------------------------------------------
     def __init__(self, id):
         """Load a filter.
 
@@ -19,7 +23,9 @@ class Filter:
         # Test validity of filters
         FILTERS = ska.svo.load_filter_list()
         if id not in FILTERS:
-            raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
+            rich.print(f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] command to list available filters")
+            sys.exit(1)
+            # raise ValueError(f"Unknown filter ID {id}. Use [green]ska filter[/green] to list available filters")
 
         self.id = id
         self.path = os.path.join(ska.PATH_CACHE, f"{self.id.replace('/','_')}.xml")
@@ -40,6 +46,7 @@ class Filter:
         self.wave = data.Wavelength
         self.trans = data.Transmission
 
+    # --------------------------------------------------------------------------------
     def display_summary(self):
         import rich
         rich.print(f"\n[bright_cyan]Filter ID :[/bright_cyan] {self.id}")
@@ -69,6 +76,7 @@ class Filter:
         except:
             _ = 0
 
+    # --------------------------------------------------------------------------------
     def compute_flux(self, spectrum):
         """Computes the flux of a spectrum in a given band.
 
@@ -99,7 +107,7 @@ class Filter:
         interpol_transmission = np.interp(lambda_int, self.wave, self.trans)
 
         interpol_spectrum = np.interp(
-            lambda_int, spectrum["Wavelength"], spectrum["Flux"]
+            lambda_int, spectrum.Wavelength, spectrum.Flux
         )
 
         # Compute the flux by integrating over wavelength.
