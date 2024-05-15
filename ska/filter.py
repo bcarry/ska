@@ -1,5 +1,3 @@
-# from pathlib import Path
-
 import os
 from astropy.io.votable import parse
 import numpy as np
@@ -21,7 +19,7 @@ class Filter:
         # Test validity of filters
         FILTERS = ska.svo.load_filter_list()
         if id not in FILTERS:
-            raise ValueError(f"Unknown filter ID {id}. Choose from\n {FILTERS}")
+            raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
 
         self.id = id
         self.path = os.path.join(ska.PATH_CACHE, f"{self.id.replace('/','_')}.xml")
@@ -34,13 +32,42 @@ class Filter:
         self.VOFilter = parse(self.path)
         data = pd.DataFrame(data=self.VOFilter.get_first_table().array.data)
 
-        # Apply transforms
+        # Select non-zero transmission and convert to micron
         data = data[data.Transmission >= 1e-5]
         data.Wavelength /= 10000  # to micron
 
-        # Store in attributes
+        # Store attributes
         self.wave = data.Wavelength
         self.trans = data.Transmission
+
+    def display_summary(self):
+        import rich
+        rich.print(f"\n[bright_cyan]Filter ID :[/bright_cyan] {self.id}")
+
+        try: 
+            rich.print("[bright_cyan]Facility  :[/bright_cyan] {:s}".format( self.VOFilter.get_field_by_id("Facility").value))
+        except:
+            _ = 0
+        
+        try: 
+            rich.print("[bright_cyan]Instrument:[/bright_cyan] {:s}".format( self.VOFilter.get_field_by_id("Instrument").value))
+        except:
+            _ = 0
+
+        try: 
+            rich.print("[bright_cyan]Band      :[/bright_cyan] {:s}".format( self.VOFilter.get_field_by_id("Band").value))
+        except:
+            _ = 0
+
+        try: 
+            rich.print("[bright_cyan]Central λ :[/bright_cyan] [green]{:.3f}[/green] [bright_cyan](micron)[/bright_cyan]".format( self.VOFilter.get_field_by_id("WavelengthCen").value/1e4))
+        except:
+            _ = 0
+
+        try: 
+            rich.print("[bright_cyan]FWHM      :[/bright_cyan] [green]{:.3f}[/green] [bright_cyan](micron)[/bright_cyan]".format( self.VOFilter.get_field_by_id("FWHM").value/1e4))
+        except:
+            _ = 0
 
     def compute_flux(self, spectrum):
         """Computes the flux of a spectrum in a given band.

@@ -11,8 +11,11 @@ import os
 
 __version__ = "alpha"
 
-# Path to SKA auxilliary files
+# Cache location
 PATH_CACHE = os.path.join(os.path.expanduser("~"), ".cache/ska")
+os.makedirs(PATH_CACHE, exist_ok=True)
+
+# SKA Auxliary data
 PATH_VEGA = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "..",
@@ -24,6 +27,3 @@ PATH_SUN = os.path.join(
 )
 
 PATH_FILTER_LIST = os.path.join(PATH_CACHE, "svo_filters.txt")
-
-# Check for existence of index file and cache directory
-os.makedirs(PATH_CACHE, exist_ok=True)

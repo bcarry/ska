@@ -19,8 +19,8 @@ def cli_ska():
     """CLI for Spectral-Kit for Asteroids."""
     pass
 
-
-
+# --------------------------------------------------------------------------------
+# Status 
 @cli_ska.command()
 @click.option(
     "--clear",
@@ -79,9 +79,10 @@ def status(clear, update):
             rich.print("\nDownload filters from SVO Filter Service..")
             cache.update_filters(cached_ids)
 
-
+# --------------------------------------------------------------------------------
+# Fuzzy search among filters ID
 @cli_ska.command()
-def filter():
+def id():
     """Fuzzy-search SVO filter index."""
 
     PATH_EXECUTABLE = shutil.which("fzf")
@@ -119,7 +120,8 @@ def filter():
         sys.exit()
     return choice
 
-
+# --------------------------------------------------------------------------------
+# Color computation
 @cli_ska.command()
 @click.argument("file")
 @click.argument("filter1")
@@ -137,3 +139,14 @@ def color(file, filter1, filter2, phot_sys):
     spectrum = pd.read_csv(file)
     color = skatools.compute_color(spectrum, f_1, f_2, phot_sys=phot_sys)
     click.echo(f"{color:4.2f}")
+
+
+# --------------------------------------------------------------------------------
+# Filter basic information
+@cli_ska.command()
+@click.argument("filter")
+def filter(filter):
+    """Display the basic properties of the filter"""
+
+    f = ska.Filter(filter)
+    f.display_summary()

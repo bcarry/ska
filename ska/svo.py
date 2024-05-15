@@ -5,15 +5,6 @@ from astropy.io.votable import parse
 
 import ska
 
-# PATH_FILTERS = os.path.join(
-#    os.path.dirname(os.path.abspath(__file__)), "..", "data", "svo_filters.txt"
-# )
-#
-# FILTERS = []
-#
-# with open(PATH_FILTERS, "r") as file:
-#    FILTERS = [filt.strip() for filt in file]
-
 
 def download_filter_list():
     """Retrieve the list of filter IDs from SVO Filter Service
@@ -27,16 +18,25 @@ def download_filter_list():
 
     try:
 
-        # Request SVO filter list
+        # Main SVO filter list
         r = requests.get(
             "https://svo.cab.inta-csic.es/files/svo/Public/HowTo/FPS/FPS_info.xml"
         )
         SVOFilters = parse(io.BytesIO(r.content))
-        filter_info = SVOFilters.get_first_table().to_table().to_pandas()
-
-        # Write it to disk
-        filter_info["filterID"].to_csv(ska.PATH_FILTER_LIST, index=False
+        main_id = SVOFilters.get_first_table().to_table().to_pandas().filterID.to_list()
+        
+        # Secondary SVO filter list
+        r = requests.get(
+            "https://svo.cab.inta-csic.es/files/svo/Public/HowTo/FPS/others.xml"
         )
+        SVOFilters = parse(io.BytesIO(r.content))
+        other_id = SVOFilters.get_first_table().to_table().to_pandas()['__ID'].to_list()
+
+        # Merge and Write to disk
+        filter_id = main_id + other_id
+        with open(ska.PATH_FILTER_LIST, "w") as file:
+            for f in filter_id:
+                file.write(f"{f}\n")
         return True
 
     except:
@@ -51,7 +51,11 @@ def load_filter_list():
     =======
     list
         The list of filter IDS
+
     """
+    if not os.path.isfile(ska.PATH_FILTER_LIST):
+        download_filter_list()
+
     with open(ska.PATH_FILTER_LIST, "r") as file:
         FILTERS = [filt.strip() for filt in file]
     return FILTERS
@@ -75,8 +79,7 @@ def download_filter(id):
     # Test if the filter ID is valid
     FILTERS = load_filter_list()
     if id not in FILTERS:
-        raise ValueError(f"Unknown filter ID {id}. Choose from\n {FILTERS}")
-        # raise ValueError(f"Unknown filter ID {id}. Choose from\n {ska.svo.FILTERS}")
+        raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
 
     # SVO Base URL for queries
     url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"
