@@ -44,7 +44,7 @@ def take_inventory():
 
 def update_filter_list():
     # TBD doc / handle issue
-    ska.svo.download_filter_list
+    ska.svo.download_filter_list()
 
 
 def update_filters(ids):

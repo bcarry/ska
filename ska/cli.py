@@ -65,7 +65,6 @@ def status(clear, update):
         else:
             decision = "none"
 
-
         if clear or decision == "1":
             rich.print("\nClearing the cached filters and filter list..")
             cache.clear()
@@ -147,6 +146,26 @@ def color(file, filter1, filter2, phot_sys, reflectance):
     else:
         color = skatools.compute_color(spectrum, f_1, f_2, phot_sys=phot_sys)
     click.echo(f"{color:4.2f}")
+
+
+
+# --------------------------------------------------------------------------------
+# Solar Colors
+@cli_ska.command()
+@click.argument("filter1")
+@click.argument("filter2")
+@click.option("--phot_sys", default="Vega", help="Photometric system ([green]Vega[/green] | ST | AB)")
+def solarcolor(filter1, filter2, phot_sys):
+    """Compute the color of the Sun between two filters"""
+
+    # Load filters
+    f_1 = ska.Filter(filter1)
+    f_2 = ska.Filter(filter2)
+
+    # Compute color
+    color = skatools.solar_color(f_1, f_2, phot_sys=phot_sys)
+    click.echo(f"{color:4.2f}")
+
 
 
 # --------------------------------------------------------------------------------

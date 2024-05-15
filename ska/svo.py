@@ -1,5 +1,6 @@
 import io
 import os
+import sys
 import requests
 from astropy.io.votable import parse
 import rich

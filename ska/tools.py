@@ -100,9 +100,9 @@ def reflectance_to_color(
     # Wavelength range to integrate over
     lambda_int = np.arange(lambda_min, lambda_max, 0.0005)
 
-    # Read spectrum othe Sun if not provided
-    if not isinstance(sun, pd.DataFrame):  
-        sun = pd.read_csv(ska.PATH_SUN)
+    # Read spectrum of the Sun if not provided
+    if not isinstance(sun, ska.Spectrum):  
+        sun = ska.Spectrum(ska.PATH_SUN)
 
     # Interpolate spectrum of the Sun
     interpol_spectrum = np.interp(lambda_int, sun.Wavelength, sun.Flux)
@@ -160,11 +160,14 @@ def solar_color(filter1, filter2, phot_sys="AB", vega=None):
     # Solar color in Vega photometric system
     elif phot_sys == "Vega":
         # Read Vega spectrum if not provided
-        if "vega" not in locals():
-            spec_vega = pd.read_csv(ska.PATH_VEGA)
+        if not "vega" in locals():            
+            vega = ska.Spectrum(ska.PATH_VEGA)
+        else:
+            if not isinstance(vega, ska.Spectrum):
+                vega = ska.Spectrum(ska.PATH_VEGA)
 
         # Compute color of Vega
-        vega_ST = compute_color(spec_vega, filter1, filter2, phot_sys="ST")
+        vega_ST = compute_color(vega, filter1, filter2, phot_sys="ST")
         return colorST - vega_ST
 
     # Solar color in ST photometric system
