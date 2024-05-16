@@ -130,7 +130,7 @@ class Filter:
 
 
     # --------------------------------------------------------------------------------
-    def solar_color(self, filter, phot_sys="AB", vega=None):
+    def solar_color(self, filter, phot_sys="Vega", vega=None):
         """Compute the color of the Sun between current and provided filter
 
         Parameters
@@ -148,8 +148,10 @@ class Filter:
         float
             The solar color
         """
+        if not isinstance(filter, ska.Filter):
+            filter = ska.Filter(filter)
 
-        # Exrtract Solar Fluxes
+        # Extract Solar Fluxes
         sun_1 = self.VOFilter.get_field_by_id("Fsun").value
         sun_2 = filter.VOFilter.get_field_by_id("Fsun").value
 
