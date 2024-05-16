@@ -36,7 +36,7 @@ def take_inventory():
         os.path.join(ska.PATH_CACHE, "*.xml"))
     )
     cached_ids = set(
-        FILT.replace("_", "/") for FILT in cached_xmls
+        os.path.basename(FILT).replace("_", "/")[:-4] for FILT in cached_xmls
     )
 
     return cached_ids, cached_xmls
@@ -47,7 +47,7 @@ def update_filter_list():
     ska.svo.download_filter_list()
 
 
-def update_filters(ids):
+def update_filters(ids, force=False):
     """Update the cached filters (VOTable files).
 
     Parameters
@@ -58,4 +58,4 @@ def update_filters(ids):
 
     # Download filters
     for f in ids:
-        ska.svo.download_filter(f)
+        ska.svo.download_filter(f, force=force)

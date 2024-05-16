@@ -40,41 +40,50 @@ class Filter:
 
         # Select non-zero transmission and convert to micron
         data = data[data.Transmission >= 1e-5]
-        data.Wavelength /= 10000  # to micron
+        data.Wavelength /= 1e4  # to micron
 
         # Store attributes
+        self.id = id
         self.wave = data.Wavelength
         self.trans = data.Transmission
+        self.central_wavelength = self.VOFilter.get_field_by_id("WavelengthCen").value/1e4
+        self.FWHM = self.VOFilter.get_field_by_id("FWHM").value/1e4
+
+        try: 
+            self.facility = self.VOFilter.get_field_by_id("Facility").value
+        except:
+            self.facility = None
+
+        try: 
+            self.instrument = self.VOFilter.get_field_by_id("Instrument").value
+        except:
+            self.instrument = None
+
+        try: 
+            self.band = self.VOFilter.get_field_by_id("Band").value
+        except:
+            self.band = None
+
+
 
     # --------------------------------------------------------------------------------
     def display_summary(self):
         import rich
         rich.print(f"\n[bright_cyan]Filter ID :[/bright_cyan] {self.id}")
 
-        try: 
-            rich.print("[bright_cyan]Facility  :[/bright_cyan] {:s}".format( self.VOFilter.get_field_by_id("Facility").value))
-        except:
-            _ = 0
+        if self.facility is not None:
+            rich.print(f"[bright_cyan]Facility  :[/bright_cyan] {self.facility:s}")
+
+
+        if self.instrument is not None: 
+            rich.print(f"[bright_cyan]Instrument:[/bright_cyan] {self.instrument:s}")
         
-        try: 
-            rich.print("[bright_cyan]Instrument:[/bright_cyan] {:s}".format( self.VOFilter.get_field_by_id("Instrument").value))
-        except:
-            _ = 0
-
-        try: 
-            rich.print("[bright_cyan]Band      :[/bright_cyan] {:s}".format( self.VOFilter.get_field_by_id("Band").value))
-        except:
-            _ = 0
-
-        try: 
-            rich.print("[bright_cyan]Central λ :[/bright_cyan] [green]{:.3f}[/green] [bright_cyan](micron)[/bright_cyan]".format( self.VOFilter.get_field_by_id("WavelengthCen").value/1e4))
-        except:
-            _ = 0
-
-        try: 
-            rich.print("[bright_cyan]FWHM      :[/bright_cyan] [green]{:.3f}[/green] [bright_cyan](micron)[/bright_cyan]".format( self.VOFilter.get_field_by_id("FWHM").value/1e4))
-        except:
-            _ = 0
+        if self.band is not None:
+            rich.print(f"[bright_cyan]Band      :[/bright_cyan] {self.band:s}")
+        
+        rich.print(f"[bright_cyan]Central λ :[/bright_cyan] [green]{self.central_wavelength:.3f}[/green] [bright_cyan](micron)[/bright_cyan]")
+        rich.print(f"[bright_cyan]FWHM      :[/bright_cyan] [green]{self.FWHM:.3f}[/green] [bright_cyan](micron)[/bright_cyan]")
+        
 
     # --------------------------------------------------------------------------------
     def compute_flux(self, spectrum):
@@ -118,3 +127,56 @@ class Filter:
         denom = np.trapz(interpol_transmission * factor, lambda_int)
         flux = nom / denom
         return flux
+
+
+    # --------------------------------------------------------------------------------
+    def solar_color(self, filter, phot_sys="AB", vega=None):
+        """Compute the color of the Sun between current and provided filter
+
+        Parameters
+        ==========
+        filter: str
+            The filter unique ID (see SVO filter service)
+        
+        phot_sys : str
+            Photometric system in which to report the color (default=AB)
+        
+        vega : ska.Spectrum
+
+        Returns
+        =======
+        float
+            The solar color
+        """
+
+        # Exrtract Solar Fluxes
+        sun_1 = self.VOFilter.get_field_by_id("Fsun").value
+        sun_2 = filter.VOFilter.get_field_by_id("Fsun").value
+
+        # Convert to magnitude
+        mag_1 = -2.5 * np.log10(sun_1)
+        mag_2 = -2.5 * np.log10(sun_2)
+        colorST = mag_1 - mag_2
+
+        # Solar color in ST photometric system
+        if phot_sys == "ST":
+            return colorST
+
+        # Solar color in Vega photometric system
+        elif phot_sys == "Vega":
+            # Read Vega spectrum if not provided
+            if not "vega" in locals():            
+                vega = ska.Spectrum(ska.PATH_VEGA)
+            else:
+                if not isinstance(vega, ska.Spectrum):
+                    vega = ska.Spectrum(ska.PATH_VEGA)
+
+            # Compute color of Vega
+            vega_ST = vega.compute_color(self, filter, phot_sys="ST")
+            return colorST - vega_ST
+
+        # Solar color in ST photometric system
+        else:
+            pivot_1 = self.VOFilter.get_field_by_id("WavelengthPivot").value
+            pivot_2 = filter.VOFilter.get_field_by_id("WavelengthPivot").value
+            return colorST - 5 * np.log10(pivot_1 / pivot_2)

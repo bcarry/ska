@@ -5,7 +5,7 @@ import click
 import rich
 
 import ska
-import ska.tools as skatools
+# import ska.tools as skatools
 
 
 
@@ -72,7 +72,7 @@ def status(clear, update):
         elif update or decision == "2":
             rich.print(cached_ids)
             rich.print("\nDownload filters from SVO Filter Service..")
-            cache.update_filters(cached_ids)
+            cache.update_filters(cached_ids, force=True)
 
 # --------------------------------------------------------------------------------
 # Fuzzy search among filters ID
@@ -114,6 +114,9 @@ def id():
     # Extract selected line
     try:
         choice = [line for line in process.stdout][0].decode()
+        filt = ska.Filter(choice.strip())
+        filt.display_summary()
+
     except IndexError:  # no choice was made, c-c c-c
         sys.exit()
     return choice
@@ -124,7 +127,7 @@ def id():
 @click.argument("file")
 @click.argument("filter1")
 @click.argument("filter2")
-@click.option("--phot_sys", default="Vega", help="Photometric system ([green]Vega[/green] | ST | AB)")
+@click.option("--phot_sys", default="Vega", help="Photometric system: Vega (default) | ST | AB")
 @click.option('--reflectance', '-r', is_flag=True, default=False, help="Multiply the input reflectance by Solar spectrum.")
 def color(file, filter1, filter2, phot_sys, reflectance):
     """Compute the color between two filters"""
@@ -142,9 +145,11 @@ def color(file, filter1, filter2, phot_sys, reflectance):
 
     # Compute color
     if reflectance:
-        color = skatools.reflectance_to_color(spectrum, f_1, f_2, phot_sys=phot_sys)
+        color = spectrum.reflectance_to_color(f_1, f_2, phot_sys=phot_sys)
+        # color = skatools.reflectance_to_color(spectrum, f_1, f_2, phot_sys=phot_sys)
     else:
-        color = skatools.compute_color(spectrum, f_1, f_2, phot_sys=phot_sys)
+        color = spectrum.compute_color(f_1, f_2, phot_sys=phot_sys)
+        # color = skatools.compute_color(spectrum, f_1, f_2, phot_sys=phot_sys)
     click.echo(f"{color:4.2f}")
 
 
@@ -163,7 +168,8 @@ def solarcolor(filter1, filter2, phot_sys):
     f_2 = ska.Filter(filter2)
 
     # Compute color
-    color = skatools.solar_color(f_1, f_2, phot_sys=phot_sys)
+    color = f_1.solar_color(f_2, phot_sys=phot_sys)
+    # color = skatools.solar_color(f_1, f_2, phot_sys=phot_sys)
     click.echo(f"{color:4.2f}")
 
 

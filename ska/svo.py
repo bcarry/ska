@@ -64,14 +64,17 @@ def load_filter_list():
     return FILTERS
 
 
-def download_filter(id):
+def download_filter(id, force=False):
     """Download a filter VOTable from SVO Filter Service
     http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
 
     Parameters
     ==========
     id : str
-        The unique SVO filter identifier
+        The unique SVO filter identifier to be downloaded
+
+    force : bool
+        If True, the filter VOTable will be downloaded even if it is already cached
 
     Returns
     =======
@@ -93,7 +96,7 @@ def download_filter(id):
     out = os.path.join(ska.PATH_CACHE, id.replace("/", "_") + ".xml")
 
     # Download VOTable
-    if not os.path.isfile(out):
+    if (not os.path.isfile(out)) or force:
         try:
             # Request the filter VOTable
             r = requests.get(url, params={"ID": id})
@@ -101,7 +104,7 @@ def download_filter(id):
             filter_info = SVOFilter.get_first_table()
 
             # Write it to disk
-            os.makedirs(ska.PATH_CACHE, exist_ok=True)
+            # os.makedirs(ska.PATH_CACHE, exist_ok=True)
             SVOFilter.to_xml(out)
 
         except:
