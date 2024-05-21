@@ -23,7 +23,9 @@ class Filter:
         # Test validity of filters
         FILTERS = ska.svo.load_filter_list()
         if id not in FILTERS:
-            rich.print(f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] command to list available filters")
+            rich.print(
+                f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] command to list available filters"
+            )
             sys.exit(1)
             # raise ValueError(f"Unknown filter ID {id}. Use [green]ska filter[/green] to list available filters")
 
@@ -46,44 +48,47 @@ class Filter:
         self.id = id
         self.wave = data.Wavelength
         self.trans = data.Transmission
-        self.central_wavelength = self.VOFilter.get_field_by_id("WavelengthCen").value/1e4
-        self.FWHM = self.VOFilter.get_field_by_id("FWHM").value/1e4
+        self.central_wavelength = (
+            self.VOFilter.get_field_by_id("WavelengthCen").value / 1e4
+        )
+        self.FWHM = self.VOFilter.get_field_by_id("FWHM").value / 1e4
 
-        try: 
+        try:
             self.facility = self.VOFilter.get_field_by_id("Facility").value
         except:
             self.facility = None
 
-        try: 
+        try:
             self.instrument = self.VOFilter.get_field_by_id("Instrument").value
         except:
             self.instrument = None
 
-        try: 
+        try:
             self.band = self.VOFilter.get_field_by_id("Band").value
         except:
             self.band = None
 
-
-
     # --------------------------------------------------------------------------------
     def display_summary(self):
         import rich
+
         rich.print(f"\n[bright_cyan]Filter ID :[/bright_cyan] {self.id}")
 
         if self.facility is not None:
             rich.print(f"[bright_cyan]Facility  :[/bright_cyan] {self.facility:s}")
 
-
-        if self.instrument is not None: 
+        if self.instrument is not None:
             rich.print(f"[bright_cyan]Instrument:[/bright_cyan] {self.instrument:s}")
-        
+
         if self.band is not None:
             rich.print(f"[bright_cyan]Band      :[/bright_cyan] {self.band:s}")
-        
-        rich.print(f"[bright_cyan]Central λ :[/bright_cyan] [green]{self.central_wavelength:.3f}[/green] [bright_cyan](micron)[/bright_cyan]")
-        rich.print(f"[bright_cyan]FWHM      :[/bright_cyan] [green]{self.FWHM:.3f}[/green] [bright_cyan](micron)[/bright_cyan]")
-        
+
+        rich.print(
+            f"[bright_cyan]Central λ :[/bright_cyan] [green]{self.central_wavelength:.3f}[/green] [bright_cyan](micron)[/bright_cyan]"
+        )
+        rich.print(
+            f"[bright_cyan]FWHM      :[/bright_cyan] [green]{self.FWHM:.3f}[/green] [bright_cyan](micron)[/bright_cyan]"
+        )
 
     # --------------------------------------------------------------------------------
     def compute_flux(self, spectrum):
@@ -106,7 +111,7 @@ class Filter:
 
         # Detector type
         # Photon counter
-        if self.VOFilter.get_field_by_id("DetectorType")==1:
+        if self.VOFilter.get_field_by_id("DetectorType") == 1:
             factor = lambda_int
         # Energy counter
         else:
@@ -115,9 +120,7 @@ class Filter:
         # Interpolate over the transmission range
         interpol_transmission = np.interp(lambda_int, self.wave, self.trans)
 
-        interpol_spectrum = np.interp(
-            lambda_int, spectrum.Wavelength, spectrum.Flux
-        )
+        interpol_spectrum = np.interp(lambda_int, spectrum.Wavelength, spectrum.Flux)
 
         # Compute the flux by integrating over wavelength.
         nom = np.trapz(
@@ -128,7 +131,6 @@ class Filter:
         flux = nom / denom
         return flux
 
-
     # --------------------------------------------------------------------------------
     def solar_color(self, filter, phot_sys="Vega", vega=None):
         """Compute the color of the Sun between current and provided filter
@@ -137,10 +139,10 @@ class Filter:
         ==========
         filter: str
             The filter unique ID (see SVO filter service)
-        
+
         phot_sys : str
             Photometric system in which to report the color (default=AB)
-        
+
         vega : ska.Spectrum
 
         Returns
@@ -167,7 +169,7 @@ class Filter:
         # Solar color in Vega photometric system
         elif phot_sys == "Vega":
             # Read Vega spectrum if not provided
-            if not "vega" in locals():            
+            if not "vega" in locals():
                 vega = ska.Spectrum(ska.PATH_VEGA)
             else:
                 if not isinstance(vega, ska.Spectrum):
@@ -182,3 +184,50 @@ class Filter:
             pivot_1 = self.VOFilter.get_field_by_id("WavelengthPivot").value
             pivot_2 = filter.VOFilter.get_field_by_id("WavelengthPivot").value
             return colorST - 5 * np.log10(pivot_1 / pivot_2)
+
+    # --------------------------------------------------------------------------------
+    def plot_transmission(self, figure=None):
+        """Create a plot of the transmission.
+
+        Parameters
+        ----------
+        figure : str
+            Path to save a figure
+
+        Returns
+        -------
+        figure, axe
+            Matplotlib figure and axe
+        """
+
+        # Define figure
+        import matplotlib.pyplot as plt
+
+        fig, ax = plt.subplots()
+
+        # Plot transmission
+        ax.plot(self.wave, self.trans, label=self.id)
+
+        # Central wavelength and FWHM
+        ax.axvline(self.central_wavelength, color="gray", linestyle="--",
+        label=r"$\lambda_c$ = {:.2f} $\mu$m".format(self.central_wavelength))
+        ax.plot(
+            self.central_wavelength + self.FWHM / 2 * np.array([-1, 1]),
+            [self.trans.max()/2, self.trans.max()/2],
+            linestyle="dotted",
+            color="gray",
+            label=r"FWHM = {:.2f} $\mu$m".format(self.FWHM),
+        )
+
+        # Add labels
+        ax.set_xlabel("Wavelength (micron)")
+        ax.set_ylabel("Transmission")
+        ax.legend(loc='lower right')
+        ax.set_ylim(bottom=0)
+        fig.tight_layout()
+
+        # Save to file
+        if figure is not None:
+            fig.savefig(figure, dpi=180, facecolor="w", edgecolor="w")
+
+        return fig, ax

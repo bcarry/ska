@@ -183,3 +183,20 @@ def filter(filter):
 
     f = ska.Filter(filter)
     f.display_summary()
+
+
+
+# --------------------------------------------------------------------------------
+# Plot filter transmission
+@cli_ska.command()
+@click.argument("filter")
+@click.option("--figure", default=None, help="Name of the figure")
+def plot(filter, figure):
+    """Display the basic properties of the filter"""
+
+    
+    f = ska.Filter(filter)
+    
+    import matplotlib.pyplot as plt
+    fig, ax = f.plot_transmission(figure)
+    plt.show()
