@@ -191,12 +191,15 @@ def filter(filter):
 @cli_ska.command()
 @click.argument("filter")
 @click.option("--figure", default=None, help="Name of the figure")
-def plot(filter, figure):
+@click.option("--black", default=False, is_flag=True, help="Figure with a dark background")
+def plot(filter, figure, black):
     """Display the basic properties of the filter"""
 
-    
     f = ska.Filter(filter)
     
     import matplotlib.pyplot as plt
-    fig, ax = f.plot_transmission(figure)
-    plt.show()
+    fig, ax = f.plot_transmission(figure, black=black)
+    
+
+    if not 'figure' in locals():
+        plt.show()

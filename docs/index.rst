@@ -76,16 +76,40 @@ from spectra.
 
      .. code-block:: python
 
-       >>> from ska import Filter                # class handling filters
-       >>> filt_V = Filter("Generic/Johnson.V")  # retrieve Johnson V filter
-       >>> filt_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
-
-       >>> filt_V.solar_color(filt_Ks)
-       1.53020564
+      >>> from ska import Filter                # class handling filters
+      >>> filt_V = Filter("Generic/Johnson.V")  # retrieve Johnson V filter
+      >>> filt_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
+      
+      >>> filt_V.solar_color(filt_Ks)
+      1.53020564
+      
+      >>> filt_V.solar_color(filt_Ks, phot_sys='AB')
+      -0.3111391
        
 |br|
 
 :octicon:`graph;1em` **Plotting utilities**
+
+.. tab-set::
+
+  .. tab-item:: Command Line
+
+      .. code-block:: bash
+
+          $ ska plot Paranal/VISTA.Ks --black
+         
+  .. tab-item :: python
+
+     .. code-block:: python
+
+       >>> from ska import Filter                 # class handling filters
+       >>> VISTA_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
+       >>> VISTA_Ks.plot_transmission(black=True)
+
+ 
+.. image:: gfx/ska_filter.png
+  :width: 400
+  :alt: Example of a SKA plot of the filter transmission
 
 |br|
 

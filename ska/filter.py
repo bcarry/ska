@@ -186,7 +186,7 @@ class Filter:
             return colorST - 5 * np.log10(pivot_1 / pivot_2)
 
     # --------------------------------------------------------------------------------
-    def plot_transmission(self, figure=None):
+    def plot_transmission(self, figure=None, black=False):
         """Create a plot of the transmission.
 
         Parameters
@@ -203,7 +203,12 @@ class Filter:
         # Define figure
         import matplotlib.pyplot as plt
 
+        if black:
+            plt.style.use('dark_background')
+        else:
+            plt.style.use('default')
         fig, ax = plt.subplots()
+
 
         # Plot transmission
         ax.plot(self.wave, self.trans, label=self.id)
@@ -228,6 +233,7 @@ class Filter:
 
         # Save to file
         if figure is not None:
-            fig.savefig(figure, dpi=180, facecolor="w", edgecolor="w")
+            # fig.savefig(figure, dpi=180, facecolor="w", edgecolor="w")
+            fig.savefig(figure, dpi=180)
 
         return fig, ax
