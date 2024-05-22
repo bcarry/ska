@@ -22,7 +22,7 @@ from spectra.
 
 |br|
 
-:octicon:`archive;1em` **Easy handling of filters with SVO**
+:octicon:`archive;1em` **Easy handling of filters**
 
 
 .. grid:: 2
@@ -57,7 +57,21 @@ from spectra.
       :link: color_flux
       :link-type: ref
 
-      Show me the transmission curve of Gaia/RP
+      What is the V-J of a blackbody of 10000K?
+
+.. grid:: 2
+
+    .. grid-item-card::
+      :link: color_refl
+      :link-type: ref
+
+      What is the i-z of a V-type asteroid?
+
+    .. grid-item-card::
+      :link: color_phot_sys
+      :link-type: ref
+
+      How to specify the photometric system: AB, Vega, ST?
 
 
 |br|

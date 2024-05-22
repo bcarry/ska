@@ -126,6 +126,6 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
 
 .. _filter_search:
 
-:octicon:`graph;1em` Searching among filters
+Searching among filters
 ============================================
 
