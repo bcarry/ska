@@ -62,14 +62,14 @@ graphviz_output_format = "svg"
 
 
 # ------
-# hoverxref_role_types = {
-#     "hoverxref": "modal",
-#     "ref": "modal",  # for hoverxref_auto_ref config
-#     "confval": "tooltip",  # for custom object
-#     "mod": "tooltip",  # for Python Sphinx Domain
-#     "class": "tooltip",  # for Python Sphinx Domain
-#     "term": "tooltip",  # for Python Sphinx Domain
-# }
+hoverxref_role_types = {
+    "hoverxref": "modal",
+    "ref": "modal",  # for hoverxref_auto_ref config
+    "confval": "tooltip",  # for custom object
+    "mod": "tooltip",  # for Python Sphinx Domain
+    "class": "tooltip",  # for Python Sphinx Domain
+    "term": "tooltip",  # for Python Sphinx Domain
+}
 
 hoverxref_roles = ["numref", "confval", "setting", "term"]
 
@@ -85,7 +85,7 @@ hoverxref_version = "latest"
 # html_theme_path = [sphinx_redactor_theme.get_html_theme_path()]
 html_theme = "furo"
 html_static_path = ["_static"]
-# html_logo = "gfx/logo_ska.svg"
+html_logo = "gfx/logo-ska.png"
 
 pygments_style = "monokai"
 pygments_dark_style = "monokai"
@@ -98,8 +98,8 @@ html_theme_options = {
     "sidebar_hide_name": True,
     "navigation_with_keys": True,
     "top_of_page_button": None,
-    #"light_logo": "logo_ska.svg",
-    #"dark_logo": "logo_ska_light.svg",
+    "light_logo": "logo_ska_light.png",
+    "dark_logo": "logo_ska_black.png",
     # "logo_only": True,
     # "display_version": True,
     # "prev_next_buttons_location": "bottom",

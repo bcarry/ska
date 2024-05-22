@@ -24,42 +24,8 @@ from spectra.
 
 |br|
 
-:octicon:`archive;1em` **Easy handling of filters with SVO**
-
-
-.. tab-set::
-
-  .. tab-item:: Command Line
-
-      .. code-block:: bash
-
-          $ ska filter Paranal/VISTA.Ks
-          
-          Filter ID : Paranal/VISTA.Ks
-          Facility  : Paranal
-          Instrument: VIRCAM
-          Band      : Ks
-          Central λ : 2.148 (micron)
-          FWHM      : 0.306 (micron)
-
-
-  .. tab-item :: python
-
-     .. code-block:: python
-
-       >>> from ska import Filter                # class handling filters
-       >>> VISTA_Ks = Filter("Paranal/VISTA.Ks") # retrieve VISTA Ks filter
-       >>> VISTA_Ks.facility                     # get the parameter values via the dot notation
-       'Paranal'
-       >>> VISTA_Ks.instrument
-       'VIRCAM'
-       >>> VISTA_Ks.central_wavelength
-       1.6458237
-       >>> VISTA_Ks.FWHM
-       0.289423
-
-|br|
-
+:: _color_sun:
+  
 :octicon:`sun;1em` **Simple access to the colors of the Sun**
 
 .. tab-set::
@@ -89,32 +55,4 @@ from spectra.
       -0.3111391
        
 |br|
-
-:octicon:`graph;1em` **Plotting utilities**
-
-.. tab-set::
-
-  .. tab-item:: Command Line
-
-      .. code-block:: bash
-
-          $ ska plot Paranal/VISTA.Ks --black
-         
-  .. tab-item :: python
-
-     .. code-block:: python
-
-       >>> from ska import Filter                 # class handling filters
-       >>> VISTA_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
-       >>> VISTA_Ks.plot_transmission(black=True)
-
- 
-.. image:: gfx/ska_filter.png
-  :width: 400
-  :alt: Example of a SKA plot of the filter transmission
-
-|br|
-
-
-:octicon:`git-branch;1em` **Handle both flux and reflectance**
 

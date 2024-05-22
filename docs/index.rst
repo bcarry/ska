@@ -28,111 +28,39 @@ from spectra.
 .. grid:: 2
 
     .. grid-item-card::
-      :link: filters
+      :link: filter_info
       :link-type: ref
 
-      What is the number of ``Didymos``?
-      What asteroid has the number ``594913``?
+      What is the wavelength of ``VISTA.Ks`` filter?
+      What is its FWHM?
 
 
     .. grid-item-card::
-      :link: filters
+      :link: filter_plot
       :link-type: ref
 
-      What aliases of ``2000 UD93`` are used in different databases?
+      Show me the transmission curve of Gaia/RP
 
 
-
-.. tab-set::
-
-  .. tab-item:: Command Line
-
-      .. code-block:: bash
-
-          $ ska filter Paranal/VISTA.Ks
-          
-          Filter ID : Paranal/VISTA.Ks
-          Facility  : Paranal
-          Instrument: VIRCAM
-          Band      : Ks
-          Central λ : 2.148 (micron)
-          FWHM      : 0.306 (micron)
+:octicon:`sun;1em` **Easy computation of colors**
 
 
-  .. tab-item :: python
+.. grid:: 2
 
-     .. code-block:: python
+    .. grid-item-card::
+      :link: color_sun
+      :link-type: ref
 
-       >>> from ska import Filter                # class handling filters
-       >>> VISTA_Ks = Filter("Paranal/VISTA.Ks") # retrieve VISTA Ks filter
-       >>> VISTA_Ks.facility                     # get the parameter values via the dot notation
-       'Paranal'
-       >>> VISTA_Ks.instrument
-       'VIRCAM'
-       >>> VISTA_Ks.central_wavelength
-       1.6458237
-       >>> VISTA_Ks.FWHM
-       0.289423
+      What is the color of the Sun?
+
+    .. grid-item-card::
+      :link: color_flux
+      :link-type: ref
+
+      Show me the transmission curve of Gaia/RP
+
 
 |br|
-
-:octicon:`sun;1em` **Simple access to the colors of the Sun**
-
-.. tab-set::
-
-  .. tab-item:: Command Line
-
-      .. code-block:: bash
-
-          $ ska solarcolor Generic/Johnson.V Paranal/VISTA.Ks
-          1.53
-
-          $ ska solarcolor Generic/Johnson.V Paranal/VISTA.Ks --phot_sys AB
-          -0.31
-
-  .. tab-item :: python
-
-     .. code-block:: python
-
-      >>> from ska import Filter                # class handling filters
-      >>> filt_V = Filter("Generic/Johnson.V")  # retrieve Johnson V filter
-      >>> filt_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
-      
-      >>> filt_V.solar_color(filt_Ks)
-      1.53020564
-      
-      >>> filt_V.solar_color(filt_Ks, phot_sys='AB')
-      -0.3111391
-       
-|br|
-
-:octicon:`graph;1em` **Plotting utilities**
-
-.. tab-set::
-
-  .. tab-item:: Command Line
-
-      .. code-block:: bash
-
-          $ ska plot Paranal/VISTA.Ks --black
-         
-  .. tab-item :: python
-
-     .. code-block:: python
-
-       >>> from ska import Filter                 # class handling filters
-       >>> VISTA_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
-       >>> VISTA_Ks.plot_transmission(black=True)
-
- 
-.. image:: gfx/ska_filter.png
-  :width: 400
-  :alt: Example of a SKA plot of the filter transmission
-
-|br|
-
-
-:octicon:`git-branch;1em` **Handle both flux and reflectance**
 
 
 

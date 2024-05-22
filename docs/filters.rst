@@ -25,6 +25,8 @@ filters can be searched for by name.
 
 |br|
 
+.. _filter_info: 
+
 :octicon:`archive;1em` Filter Information
 =========================================
 
@@ -77,6 +79,8 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
 
 |br|
 
+.. _filter_plot: 
+
 :octicon:`graph;1em` Plotting transmission curves
 =================================================
 
@@ -92,7 +96,7 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
 
       .. code-block:: bash
 
-          $ ska plot Paranal/VISTA.Ks --black
+          $ ska plot GAIA/GAIA3.Grp --black
          
   .. tab-item :: python
 
@@ -103,13 +107,19 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
      .. code-block:: python
 
        >>> from ska import Filter                 # Class for filters
-       >>> VISTA_Ks = Filter("Paranal/VISTA.Ks")  # Retrieve VISTA Ks filter
+       >>> VISTA_Ks = Filter("GAIA/GAIA3.Grp")    # Retrieve Gaia RP filter (DR3)
        >>> VISTA_Ks.plot_transmission(black=True) # Plot the transmission curve
 
  
-.. image:: gfx/ska_filter.png
+.. image:: gfx/ska_filter_light.png
   :width: 400
   :alt: Example of a SKA plot of the filter transmission
+  :class: only-light
+
+.. image:: gfx/ska_filter_dark.png
+  :width: 400
+  :alt: Example of a SKA plot of the filter transmission
+  :class: only-dark
 
 |br|
 
