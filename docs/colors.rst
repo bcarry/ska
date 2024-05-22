@@ -10,49 +10,41 @@
 
 .. role:: gray
 
-A ``python`` client to explore the filters in 
-`SVO Filter Service
-<http://svo2.cab.inta-csic.es/theory/fps/>`_ and compute colors 
-from spectra.
-
-
 .. |br| raw:: html
 
      <br>
 
 .. highlight:: python
 
+
+``ska`` offers simple methods to compute the color of a spectrum or
+a reflectance spectrum between two filters, in the three photometric
+systems (Vega, AB, ST).
+
+
 |br|
 
-:: _color_sun:
-  
-:octicon:`sun;1em` **Simple access to the colors of the Sun**
+.. color_sun: 
 
-.. tab-set::
+:octicon:`sun;1em` Computing the colors of the Sun
+==================================================
 
-  .. tab-item:: Command Line
 
-      .. code-block:: bash
 
-          $ ska solarcolor Generic/Johnson.V Paranal/VISTA.Ks
-          1.53
+.. color_flux: 
 
-          $ ska solarcolor Generic/Johnson.V Paranal/VISTA.Ks --phot_sys AB
-          -0.31
+:octicon:`telescope;1em` Computing colors from spectra
+======================================================
 
-  .. tab-item :: python
 
-     .. code-block:: python
+.. color_refl: 
 
-      >>> from ska import Filter                # class handling filters
-      >>> filt_V = Filter("Generic/Johnson.V")  # retrieve Johnson V filter
-      >>> filt_Ks = Filter("Paranal/VISTA.Ks")  # retrieve VISTA Ks filter
-      
-      >>> filt_V.solar_color(filt_Ks)
-      1.53020564
-      
-      >>> filt_V.solar_color(filt_Ks, phot_sys='AB')
-      -0.3111391
-       
-|br|
+:octicon:`rss;1em` Computing colors from reflectance
+====================================================
+
+
+.. color_phot_sys: 
+
+:octicon:`repo-forked;1em` Switching between photometric systems
+================================================================
 

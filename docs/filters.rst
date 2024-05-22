@@ -56,9 +56,10 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
   .. tab-item :: python
 
     The ``Filter`` class offers a simple way to access the basic information of a filter.
-    It also contains a ``VOFilter`` attribute, which is 
+    It also contains a ``VOFilter`` attribute, which is a
     `astropy.io.votable.tree.VOTableFile <http://docs.astropy.org/en/stable/api/astropy.io.votable.tree.VOTableFile.html>`_
-    object, which contains all informations.
+    object, which contains all informations from the filter VOTable from the 
+    `SVO Filter Profile Service <http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php>`_.
 
      .. code-block:: python
 
@@ -113,11 +114,13 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
  
 .. image:: gfx/ska_filter_light.png
   :width: 400
+  :align: center
   :alt: Example of a SKA plot of the filter transmission
   :class: only-light
 
 .. image:: gfx/ska_filter_dark.png
   :width: 400
+  :align: center
   :alt: Example of a SKA plot of the filter transmission
   :class: only-dark
 
@@ -126,6 +129,21 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
 
 .. _filter_search:
 
-Searching among filters
-============================================
+:octicon:`search;1em` Searching among filters
+=============================================
 
+The `SVO Filter Profile Service <http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php>`_ defines
+a unique identifier for each filter in its database. It is extremely useful to avoid confusion
+between similar filters from different facilities and instruments, such as the `g` filter
+from the
+`SDSS <svo2.cab.inta-csic.es/theory/fps/index.php?id=SLOAN/SDSS.g>`_ and
+`Pan-STARRS <svo2.cab.inta-csic.es/theory/fps/index.php?id=PAN-STARRS/PS1.g>`_ surveys, that are **not** the same.
+
+``ska`` offers an interactive search dialog using the `fzf
+<https://github.com/junegunn/fzf/>`_  fuzzy-finder. Simply type
+``$ ska id``.
+
+The ``fzf`` tool needs to be installed separately from ``ska``. On most
+systems (Linux + MacOS), this requires a single command on the terminal, as
+explained in the `fzf documentation
+<https://github.com/junegunn/fzf/#installation>`_.

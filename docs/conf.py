@@ -80,12 +80,9 @@ hoverxref_version = "latest"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-# html_theme = "sphinx_redactor_theme"
-# html_theme_path = [sphinx_redactor_theme.get_html_theme_path()]
 html_theme = "furo"
 html_static_path = ["_static"]
-html_logo = "gfx/logo-ska.png"
+html_favicon = "gfx/favicon-ska.png"
 
 pygments_style = "monokai"
 pygments_dark_style = "monokai"
@@ -105,15 +102,17 @@ html_theme_options = {
     # "prev_next_buttons_location": "bottom",
     # "style_external_links": True,
     # "vcs_pageview_mode": "",
-    # # "style_nav_header_background": "white",
     # # Toc options
-    # "collapse_navigation": False,
-    # "sticky_navigation": False,
+    "collapse_navigation": False,
+    "sticky_navigation": False,
     # "navigation_depth": 4,
     # "includehidden": True,
     # "titles_only": False,
 }
 
+html_context = {
+   "default_mode": "dark"
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

@@ -7,8 +7,8 @@
 Getting started
 ###############
 
-Install ``ska``
-=================
+:octicon:`rocket;1em` Install ``ska``
+=====================================
 
 
 ``ska`` is available on the `python package index <https://pypi.org>`_ as *space-ska*:
@@ -28,19 +28,24 @@ In addition, you can now import the ``ska`` ``python`` package.
 
       .. code-block:: bash
 
-           $ ska
+          $ ska
 
-           Usage: ska [OPTIONS] COMMAND [ARGS]...
-           
-             CLI for Spectral-Kit for Asteroids.
-           
-           Options:
-             --version  Show the version and exit.
-             --help     Show this message and exit.
-           
-           Commands:
-             color   Compute the color between two filters
-             filter  Fuzzy-search SVO filter index.
+          Usage: ska [OPTIONS] COMMAND [ARGS]...
+
+            CLI for Spectral-Kit for Asteroids.
+
+          Options:
+            --version  Show the version and exit.
+            --help     Show this message and exit.
+
+          Commands:
+            color       Compute the color between two filters
+            filter      Display the basic properties of the filter
+            id          Fuzzy-search SVO filter index.
+            plot        Display the basic properties of the filter
+            solarcolor  Compute the color of the Sun between two filters
+            status      Echo the status of the cached filters.
+
 
   .. tab-item :: python
 
@@ -50,23 +55,31 @@ In addition, you can now import the ``ska`` ``python`` package.
          >>> import ska
 
 `ska` is still in its early days, and `new versions
-<https://github.com/maxmahlke/rocks/blob/master/CHANGELOG.md>`_ come out
+<https://github.com/bcarry/ska/blob/main/CHANGELOG.md>`_ come out
 frequently. 
 
-.. _install_fzf:
 
-Optional: Interactive Search
-============================
+:octicon:`server;1em` Manage ``ska`` cache
+=========================================
 
-``ska`` provides an interactive search dialogue using the `fzf
-<https://github.com/junegunn/fzf/>`_  fuzzy-finder which is triggered if
-commands that expect an `filter identifier` as argument are
-called without argument.
+``ska`` relies extensively on the 
+`SVO Filter Profile Service <http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php>`_
+for all the aspects related to filters (both the list and their properties).
+To speed up ``ska`` the filters are cached locally. It is recommended to
+update the cache regularly, by running the following command
 
-The ``fzf`` tool needs to be installed separately from ``ska``. On most
-systems (Linux + MacOS), this requires a single command on the terminal, as
-explained in the `fzf documentation
-<https://github.com/junegunn/fzf/#installation>`_
+.. code-block:: bash
+
+    $ ska status
+
+    Contents of /home/bcarry/.cache/ska:
+
+            10 filters
+
+    Update or clear the cached filters and filter list?
+    [0] No [1] Clear cache [2] Update data  (0): 
+
+
 
 .. raw:: html
 

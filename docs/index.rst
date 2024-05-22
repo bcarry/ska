@@ -25,7 +25,7 @@ from spectra.
 :octicon:`archive;1em` **Easy handling of filters**
 
 
-.. grid:: 2
+.. grid:: 3
 
     .. grid-item-card::
       :link: filter_info
@@ -39,7 +39,13 @@ from spectra.
       :link: filter_plot
       :link-type: ref
 
-      Show me the transmission curve of Gaia/RP
+      Show me the transmission curve of ``Gaia/RP``
+
+    .. grid-item-card::
+      :link: filter_search
+      :link-type: ref
+
+      How do I find the identifier of a filter?
 
 
 :octicon:`sun;1em` **Easy computation of colors**
