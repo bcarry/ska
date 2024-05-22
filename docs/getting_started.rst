@@ -51,9 +51,7 @@ In addition, you can now import the ``ska`` ``python`` package.
 
 `ska` is still in its early days, and `new versions
 <https://github.com/maxmahlke/rocks/blob/master/CHANGELOG.md>`_ come out
-frequently. If you encounter a bug, a first step to resolve it is to
-:ref:`clear your cache directory <cache_directory>` and to update to the latest
-version using
+frequently. 
 
 .. _install_fzf:
 

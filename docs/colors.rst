@@ -1,5 +1,7 @@
+.. _colors:
+
 #########
-``ska: a Spectral Kit for Asteroids``
+``Computing colors``
 #########
 
 .. raw:: html
@@ -23,24 +25,6 @@ from spectra.
 |br|
 
 :octicon:`archive;1em` **Easy handling of filters with SVO**
-
-
-.. grid:: 2
-
-    .. grid-item-card::
-      :link: filters
-      :link-type: ref
-
-      What is the number of ``Didymos``?
-      What asteroid has the number ``594913``?
-
-
-    .. grid-item-card::
-      :link: filters
-      :link-type: ref
-
-      What aliases of ``2000 UD93`` are used in different databases?
-
 
 
 .. tab-set::
@@ -134,14 +118,3 @@ from spectra.
 
 :octicon:`git-branch;1em` **Handle both flux and reflectance**
 
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents
-
-   Home<self>
-   Getting Started<getting_started>
-   Dealing with filters<filters>
-   Computing colors<colors>
-   glossary
