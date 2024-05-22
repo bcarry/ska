@@ -95,9 +95,9 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
     Use the ``--black`` option to create a figure with a black background.
     Use the ``--figure [filename]`` option to save the figure to a file.
 
-      .. code-block:: bash
+    .. code-block:: bash
 
-          $ ska plot GAIA/GAIA3.Grp --black
+      $ ska plot GAIA/GAIA3.Grp --black
          
   .. tab-item :: python
 
@@ -105,11 +105,11 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
     ``Filter`` object. The ``plot_transmission`` method of the ``Filter`` class can be used to
     create simple plots of the transmission curve.
 
-     .. code-block:: python
+    .. code-block:: python
 
-       >>> from ska import Filter                 # Class for filters
-       >>> VISTA_Ks = Filter("GAIA/GAIA3.Grp")    # Retrieve Gaia RP filter (DR3)
-       >>> VISTA_Ks.plot_transmission(black=True) # Plot the transmission curve
+      >>> from ska import Filter                 # Class for filters
+      >>> gaia_rp = Filter("GAIA/GAIA3.Grp")     # Retrieve Gaia RP filter (DR3)
+      >>> gaia_rp.plot_transmission(black=True)  # Plot the transmission curve
 
  
 .. image:: gfx/ska_filter_light.png

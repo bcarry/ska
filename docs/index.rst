@@ -9,8 +9,8 @@
 .. role:: gray
 
 A ``python`` client to explore the filters in 
-`SVO Filter Service
-<http://svo2.cab.inta-csic.es/theory/fps/>`_ and compute colors 
+`SVO Filter Service <http://svo2.cab.inta-csic.es/theory/fps/>`_ 
+(`Rodrigo & Solano, 2020 <https://ui.adsabs.harvard.edu/abs/2020sea..confE.182R/abstract>`_) and compute colors 
 from spectra.
 
 
@@ -63,7 +63,7 @@ from spectra.
       :link: color_flux
       :link-type: ref
 
-      What is the V-J of a blackbody of 10000K?
+      What is the V-J of a blackbody at 10000K?
 
 .. grid:: 2
 
