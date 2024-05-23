@@ -7,5 +7,5 @@ Generated using the SVO Theoretical Spectra Web Server:
 http://svo2.cab.inta-csic.es/theory/newov/index.php
 
 The solar spectrum (hst_sun.csv) comes from CalSpec database:
-https://ssb.stsci.edu/cdbs_open/cdbs/current_calspec
+https://www.stsci.edu/hst/instrumentation/reference-data-for-calibration-and-tools/astronomical-catalogs/calspec
 

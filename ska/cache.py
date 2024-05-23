@@ -31,7 +31,6 @@ def take_inventory():
     """
 
     # Get all XML in cache
-    #cached_xmls = set(file_ for file_ in glob.glob(ska.PATH_CACHE, "*.xml"))
     cached_xmls = set(file_ for file_ in glob.glob(
         os.path.join(ska.PATH_CACHE, "*.xml"))
     )
@@ -59,3 +58,7 @@ def update_filters(ids, force=False):
     # Download filters
     for f in ids:
         ska.svo.download_filter(f, force=force)
+
+# Get Vega and Sun
+# https://raw.githubusercontent.com/bcarry/ska/main/data/hst_sun.csv
+# https://raw.githubusercontent.com/bcarry/ska/main/data/lte096-4.0-0.5a%2B0.0.BT-NextGen.7.dat.csv
