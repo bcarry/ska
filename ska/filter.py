@@ -210,21 +210,24 @@ class Filter:
         import matplotlib.pyplot as plt
 
         if black:
-            plt.style.use('dark_background')
+            plt.style.use("dark_background")
         else:
-            plt.style.use('default')
+            plt.style.use("default")
         fig, ax = plt.subplots()
-
 
         # Plot transmission
         ax.plot(self.wave, self.trans, label=self.id)
 
         # Central wavelength and FWHM
-        ax.axvline(self.central_wavelength, color="gray", linestyle="--",
-        label=r"$\lambda_c$ = {:.2f} $\mu$m".format(self.central_wavelength))
+        ax.axvline(
+            self.central_wavelength,
+            color="gray",
+            linestyle="--",
+            label=r"$\lambda_c$ = {:.2f} $\mu$m".format(self.central_wavelength),
+        )
         ax.plot(
             self.central_wavelength + self.FWHM / 2 * np.array([-1, 1]),
-            [self.trans.max()/2, self.trans.max()/2],
+            [self.trans.max() / 2, self.trans.max() / 2],
             linestyle="dotted",
             color="gray",
             label=r"FWHM = {:.2f} $\mu$m".format(self.FWHM),
@@ -233,7 +236,7 @@ class Filter:
         # Add labels
         ax.set_xlabel("Wavelength (micron)")
         ax.set_ylabel("Transmission")
-        ax.legend(loc='lower right')
+        ax.legend(loc="lower right")
         ax.set_ylim(bottom=0)
         fig.tight_layout()
 

@@ -11,16 +11,15 @@ import ska
 class Spectrum:
     # --------------------------------------------------------------------------------
     def __init__(self, input=None):
-        """
-        """
+        """ """
 
         # Store attributes
         self.Wavelength = None
         self.Flux = None
         self.Reflectance = False
 
-        if 'input' in locals():
-            
+        if "input" in locals():
+
             # Initialize from a file
             if isinstance(input, str):
                 self.from_csv(input)
@@ -33,10 +32,10 @@ class Spectrum:
             if isinstance(input, pd.DataFrame):
                 self.from_dataframe(input)
 
-
     # --------------------------------------------------------------------------------
     def copy(self):
         from copy import deepcopy
+
         return deepcopy(self)
 
     # --------------------------------------------------------------------------------
@@ -65,27 +64,26 @@ class Spectrum:
             sys.exit(1)
 
         # Store attributes
-        order = np.argsort( arr[:,0] )
-        self.Wavelength = arr[order,0]
-        self.Flux = arr[order,1]
+        order = np.argsort(arr[:, 0])
+        self.Wavelength = arr[order, 0]
+        self.Flux = arr[order, 1]
         self.Reflectance = reflectance
-        
 
     # --------------------------------------------------------------------------------
     def from_dataframe(self, df):
 
         # Test Wavelength column
         check_wave = True
-        if not 'Wavelength' in df.columns:
+        if not "Wavelength" in df.columns:
             check_wave = False
             rich.print(f"[red]Column 'Wavelength' missing from input.[/red]")
-        
+
         # Test Flux or Reflectance column
         check_flux = True
         check_refl = True
-        if not 'Flux' in df.columns:
+        if not "Flux" in df.columns:
             check_flux = False
-        if not 'Reflectance' in df.columns:
+        if not "Reflectance" in df.columns:
             check_refl = False
 
         if not (check_flux | check_refl):
@@ -96,12 +94,12 @@ class Spectrum:
             sys.exit(1)
 
         # Store attributes
-        order = np.argsort( df.Wavelength )
-        self.Wavelength = np.array(df.loc[order,'Wavelength'].values)
+        order = np.argsort(df.Wavelength)
+        self.Wavelength = np.array(df.loc[order, "Wavelength"].values)
         if check_flux:
-            self.Flux = np.array(df.loc[order,'Flux'].values)
+            self.Flux = np.array(df.loc[order, "Flux"].values)
         if check_refl:
-            self.Flux = np.array(df.loc[order,'Reflectance'].values)
+            self.Flux = np.array(df.loc[order, "Reflectance"].values)
             self.Reflectance = True
 
     # --------------------------------------------------------------------------------
@@ -116,7 +114,7 @@ class Spectrum:
 
         phot_sys : str
             Photometric system in which to report the color (default=Vega)
-        
+
         vega : ska.Spectrum
             The spectrum of Vega
 
@@ -156,11 +154,8 @@ class Spectrum:
         elif phot_sys == "ST":
             return -2.5 * np.log10(flux1 / flux2)
 
-
     # --------------------------------------------------------------------------------
-    def reflectance_to_flux(
-        self, sun=None
-    ):
+    def reflectance_to_flux(self, sun=None):
         """Convert reflectance to flux by multiply by Solar spectrum.
 
         Parameters
@@ -177,10 +172,9 @@ class Spectrum:
         # Test if the input is a reflectance spectrum
         if not self.Reflectance:
             rich.print(f"[red]Input spectrum is not a reflectance spectrum.[/red]")
-            
 
         # Read spectrum of the Sun if not provided
-        if not isinstance(sun, ska.Spectrum):  
+        if not isinstance(sun, ska.Spectrum):
             sun = ska.Spectrum(ska.PATH_SUN)
 
         # Interpolate spectrum of the Sun
@@ -191,7 +185,6 @@ class Spectrum:
         spectrum.Flux = self.Flux * interpol_spectrum
         spectrum.Reflectance = False
         return spectrum
-
 
     # --------------------------------------------------------------------------------
     def reflectance_to_color(
@@ -204,13 +197,13 @@ class Spectrum:
         filter_1: ska.Filter
 
         filter_2: ska.Filter
-        
+
         phot_sys : str
             Photometric system in which to report the color (default=Vega)
-        
+
         vega : ska.Spectrum
             Spectrum of Vega
-        
+
         sun : ska.Spectrum
             Spectrum of the Sun
 
@@ -228,7 +221,7 @@ class Spectrum:
         lambda_int = np.arange(lambda_min, lambda_max, 0.0005)
 
         # Read spectrum of the Sun if not provided
-        if not isinstance(sun, ska.Spectrum):  
+        if not isinstance(sun, ska.Spectrum):
             sun = ska.Spectrum(ska.PATH_SUN)
 
         # Interpolate spectrum of the Sun
@@ -238,9 +231,11 @@ class Spectrum:
 
         # Interpolate reflectance spectrum
         interpol_spectrum = np.interp(lambda_int, self.Wavelength, self.Flux)
-        interp_spectrum = ska.Spectrum(pd.DataFrame(
-            {"Wavelength": lambda_int, "Flux": interpol_spectrum * interp_sun.Flux}
-        ))
+        interp_spectrum = ska.Spectrum(
+            pd.DataFrame(
+                {"Wavelength": lambda_int, "Flux": interpol_spectrum * interp_sun.Flux}
+            )
+        )
 
         # Compute color of the reflectance*Sun spectrum
         return interp_spectrum.compute_color(

@@ -5,8 +5,6 @@ import click
 import rich
 
 import ska
-# import ska.tools as skatools
-
 
 
 @click.group()
@@ -15,8 +13,9 @@ def cli_ska():
     """CLI for Spectral-Kit for Asteroids."""
     pass
 
+
 # --------------------------------------------------------------------------------
-# Status 
+# Status
 @cli_ska.command()
 @click.option(
     "--clear",
@@ -41,14 +40,12 @@ def status(clear, update):
     # ------
     # Echo inventory
     cached_ids, cached_xmls = cache.take_inventory()
-    #date_index = index.get_modification_date()
 
     rich.print(
         f"""\nContents of {ska.PATH_CACHE}:
 
         {len(cached_xmls)} filters\n"""
     )
-        #Index updated on:  {date_index}\n"""
 
     # Update or clear
     if cached_xmls:
@@ -73,6 +70,7 @@ def status(clear, update):
             rich.print(cached_ids)
             rich.print("\nDownload filters from SVO Filter Service..")
             cache.update_filters(cached_ids, force=True)
+
 
 # --------------------------------------------------------------------------------
 # Fuzzy search among filters ID
@@ -121,14 +119,23 @@ def id():
         sys.exit()
     return choice
 
+
 # --------------------------------------------------------------------------------
 # Color computation
 @cli_ska.command()
 @click.argument("file")
 @click.argument("filter1")
 @click.argument("filter2")
-@click.option("--phot_sys", default="Vega", help="Photometric system: Vega (default) | ST | AB")
-@click.option('--reflectance', '-r', is_flag=True, default=False, help="Multiply the input reflectance by Solar spectrum.")
+@click.option(
+    "--phot_sys", default="Vega", help="Photometric system: Vega (default) | ST | AB"
+)
+@click.option(
+    "--reflectance",
+    "-r",
+    is_flag=True,
+    default=False,
+    help="Multiply the input reflectance by Solar spectrum.",
+)
 def color(file, filter1, filter2, phot_sys, reflectance):
     """Compute the color between two filters"""
 
@@ -153,13 +160,16 @@ def color(file, filter1, filter2, phot_sys, reflectance):
     click.echo(f"{color:4.2f}")
 
 
-
 # --------------------------------------------------------------------------------
 # Solar Colors
 @cli_ska.command()
 @click.argument("filter1")
 @click.argument("filter2")
-@click.option("--phot_sys", default="Vega", help="Photometric system ([green]Vega[/green] | ST | AB)")
+@click.option(
+    "--phot_sys",
+    default="Vega",
+    help="Photometric system ([green]Vega[/green] | ST | AB)",
+)
 def solarcolor(filter1, filter2, phot_sys):
     """Compute the color of the Sun between two filters"""
 
@@ -169,9 +179,7 @@ def solarcolor(filter1, filter2, phot_sys):
 
     # Compute color
     color = f_1.solar_color(f_2, phot_sys=phot_sys)
-    # color = skatools.solar_color(f_1, f_2, phot_sys=phot_sys)
     click.echo(f"{color:4.2f}")
-
 
 
 # --------------------------------------------------------------------------------
@@ -185,21 +193,22 @@ def filter(filter):
     f.display_summary()
 
 
-
 # --------------------------------------------------------------------------------
 # Plot filter transmission
 @cli_ska.command()
 @click.argument("filter")
 @click.option("--figure", default=None, help="Name of the figure")
-@click.option("--black", default=False, is_flag=True, help="Figure with a dark background")
+@click.option(
+    "--black", default=False, is_flag=True, help="Figure with a dark background"
+)
 def plot(filter, figure, black):
     """Display the basic properties of the filter"""
 
     f = ska.Filter(filter)
-    
-    import matplotlib.pyplot as plt
-    fig, ax = f.plot_transmission(figure, black=black)
-    
 
-    if not 'figure' in locals():
+    import matplotlib.pyplot as plt
+
+    fig, ax = f.plot_transmission(figure, black=black)
+
+    if not "figure" in locals():
         plt.show()

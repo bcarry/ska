@@ -50,7 +50,6 @@ from spectra.
 
 :octicon:`sun;1em` **Easy computation of colors**
 
-
 .. grid:: 3
 
     .. grid-item-card::
@@ -63,7 +62,7 @@ from spectra.
       :link: color_flux
       :link-type: ref
 
-      What is the V-J of a blackbody at 10000K?
+      What is the V-J of my spectrum?
 
     .. grid-item-card::
       :link: color_phot_sys

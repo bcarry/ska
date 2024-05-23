@@ -26,13 +26,13 @@ def download_filter_list():
         )
         SVOFilters = parse(io.BytesIO(r.content))
         main_id = SVOFilters.get_first_table().to_table().to_pandas().filterID.to_list()
-        
+
         # Secondary SVO filter list
         r = requests.get(
             "https://svo.cab.inta-csic.es/files/svo/Public/HowTo/FPS/others.xml"
         )
         SVOFilters = parse(io.BytesIO(r.content))
-        other_id = SVOFilters.get_first_table().to_table().to_pandas()['__ID'].to_list()
+        other_id = SVOFilters.get_first_table().to_table().to_pandas()["__ID"].to_list()
 
         # Merge and Write to disk
         filter_id = main_id + other_id
@@ -45,7 +45,7 @@ def download_filter_list():
         # raise Exception("Error downloading filter list")
         rich.print(f"[red]Error downloading filter {id} VOTable[/red].")
         return False
-        
+
 
 def load_filter_list():
     """Read all filter IDs from a cache list
@@ -85,7 +85,9 @@ def download_filter(id, force=False):
     # Test if the filter ID is valid
     FILTERS = load_filter_list()
     if id not in FILTERS:
-        rich.print(f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] to list available filters")
+        rich.print(
+            f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] to list available filters"
+        )
         sys.exit(1)
         # raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
 
