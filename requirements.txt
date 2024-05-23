@@ -5,27 +5,75 @@
 #
 alabaster==0.7.16
     # via sphinx
+astropy==6.1.0
+    # via space-ska (pyproject.toml)
+astropy-iers-data==0.2024.5.20.0.29.40
+    # via astropy
 babel==2.15.0
     # via sphinx
+certifi==2024.2.2
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
+click==8.1.7
+    # via space-ska (pyproject.toml)
+contourpy==1.2.1
+    # via matplotlib
+cycler==0.12.1
+    # via matplotlib
 docutils==0.19
     # via sphinx
+fonttools==4.51.0
+    # via matplotlib
+idna==3.7
+    # via requests
 imagesize==1.4.1
     # via sphinx
 jinja2==3.1.4
     # via sphinx
+kiwisolver==1.4.5
+    # via matplotlib
+markdown-it-py==3.0.0
+    # via rich
 markupsafe==2.1.5
     # via jinja2
+matplotlib==3.9.0
+    # via space-ska (pyproject.toml)
 mdurl==0.1.2
     # via markdown-it-py
+numpy==1.26.4
+    # via
+    #   astropy
+    #   contourpy
+    #   matplotlib
+    #   pandas
+    #   pyerfa
+    #   space-ska (pyproject.toml)
 packaging==24.0
     # via
     #   astropy
     #   matplotlib
     #   sphinx
+pandas==2.2.2
+    # via space-ska (pyproject.toml)
+pillow==10.3.0
+    # via matplotlib
+pyerfa==2.0.1.4
+    # via astropy
 pygments==2.18.0
     # via
     #   rich
     #   sphinx
+pyparsing==3.1.2
+    # via matplotlib
+python-dateutil==2.9.0.post0
+    # via
+    #   matplotlib
+    #   pandas
+pytz==2024.1
+    # via pandas
+pyyaml==6.0.1
+    # via astropy
 requests==2.32.2
     # via
     #   space-ska (pyproject.toml)
@@ -52,3 +100,7 @@ sphinxcontrib-qthelp==1.0.7
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.10
     # via sphinx
+tzdata==2024.1
+    # via pandas
+urllib3==2.2.1
+    # via requests
