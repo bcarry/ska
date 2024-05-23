@@ -19,7 +19,7 @@ matplotlib = "^3.5"
 furo = "^2022.9.15"
 sphinx-copybutton = "^0.5.0"
 sphinx_design = "^0.3.0"
-sphinx-hoverxref = {version = "*", optional = true}
+sphinx-hoverxref = "*"
 
 
 
