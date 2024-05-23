@@ -1,11 +1,20 @@
 
+###################
+``Getting started``
+###################
+
+.. raw:: html
+
+    <style> .gray {color:#979eab} </style>
+
+.. role:: gray
+
+
 .. |br| raw:: html
 
      <br>
 
-###############
-Getting started
-###############
+.. highlight:: python
 
 :octicon:`rocket;1em` Install ``ska``
 =====================================
@@ -60,7 +69,7 @@ frequently.
 
 
 :octicon:`server;1em` Manage ``ska`` cache
-=========================================
+==========================================
 
 ``ska`` relies extensively on the 
 `SVO Filter Profile Service <http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php>`_

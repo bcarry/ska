@@ -1,6 +1,6 @@
-#########
+#####################################
 ``ska: a Spectral Kit for Asteroids``
-#########
+#####################################
 
 .. raw:: html
 
@@ -51,7 +51,7 @@ from spectra.
 :octicon:`sun;1em` **Easy computation of colors**
 
 
-.. grid:: 2
+.. grid:: 3
 
     .. grid-item-card::
       :link: color_sun
@@ -65,14 +65,6 @@ from spectra.
 
       What is the V-J of a blackbody at 10000K?
 
-.. grid:: 2
-
-    .. grid-item-card::
-      :link: color_refl
-      :link-type: ref
-
-      What is the i-z of a V-type asteroid?
-
     .. grid-item-card::
       :link: color_phot_sys
       :link-type: ref
@@ -85,11 +77,12 @@ from spectra.
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents
+  :maxdepth: 2
+  :caption: Contents
 
-   Home<self>
-   Getting Started<getting_started>
-   Dealing with filters<filters>
-   Computing colors<colors>
-   glossary
+  Home<self>
+  Getting Started<getting_started>
+  Dealing with filters<filters>
+  Computing colors<colors>
+  How does it work?<how_it_works>
+  glossary

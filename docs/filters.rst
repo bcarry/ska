@@ -32,6 +32,8 @@ filters can be searched for by name.
 
 The main characteristics of a filter, such as central wavelength, 
 :term:`full width at half maximum (FWHM)<Full Width at Half Maximum (FWHM)>`, 
+:term:`pivot wavelength<Pivot wavelength>`
+(see :ref:`how_it_works`),
 facility, instrument, and band, can be easily retrieved with ``ska``.
 
 
@@ -51,6 +53,7 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
           Band      : Ks
           Central λ : 2.148 (micron)
           FWHM      : 0.306 (micron)
+          Pivot λ   : 2.152 (micron)
 
 
   .. tab-item :: python

@@ -17,10 +17,14 @@ Glossary
 
         The full width (in micron) of the filter, measured at half its maximal transmission.
 
-
     Photometric system
 
         Defines the reference spectrum used to define the zero points of the filters. 
+
+    Pivot wavelength
+
+        A useful quantity to convert :math:`\overline{f_\nu}` into
+        :math:`\overline{f_\lambda}` (see :ref:`how_it_works`)
 
     ST
     
@@ -34,3 +38,7 @@ Glossary
     Vega
     
         The Vega photometric system defines the zero points of the filters from the spectrum of the star Vega.
+
+    ZP
+
+        Zero point of the filter, defining the reference flux, different in each photometric system.

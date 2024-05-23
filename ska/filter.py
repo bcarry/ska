@@ -52,6 +52,9 @@ class Filter:
             self.VOFilter.get_field_by_id("WavelengthCen").value / 1e4
         )
         self.FWHM = self.VOFilter.get_field_by_id("FWHM").value / 1e4
+        self.pivot_wavelength = (
+            self.VOFilter.get_field_by_id("WavelengthPivot").value / 1e4
+        )
 
         try:
             self.facility = self.VOFilter.get_field_by_id("Facility").value
@@ -88,6 +91,9 @@ class Filter:
         )
         rich.print(
             f"[bright_cyan]FWHM      :[/bright_cyan] [green]{self.FWHM:.3f}[/green] [bright_cyan](micron)[/bright_cyan]"
+        )
+        rich.print(
+            f"[bright_cyan]Pivot λ   :[/bright_cyan] [green]{self.pivot_wavelength:.3f}[/green] [bright_cyan](micron)[/bright_cyan]"
         )
 
     # --------------------------------------------------------------------------------
