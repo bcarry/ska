@@ -7,8 +7,8 @@ import requests
 import ska
 
 
-# ------
-# Functions for cache management
+# --------------------------------------------------------------------------------
+# Cache management for Filters
 def clear():
     """Remove the cached filters and the acceptable list"""
 
@@ -60,26 +60,44 @@ def update_filters(ids, force=False):
     for f in ids:
         ska.svo.download_filter(f, force=force)
 
-
-# Get Vega and Sun
+# --------------------------------------------------------------------------------
+# Cache management for Spectra
 def download_sun_vega():
     """Download the spectra of the Sun and Vega"""
 
     try:
 
-        # Get Solar Spectrum
+        # Get the spectrum of the Sun
         r = requests.get(
             "https://raw.githubusercontent.com/bcarry/ska/main/data/hst_sun.csv"
         )
         with open(ska.PATH_SUN, "w") as file:
             file.write(r.text)
 
-        # Get Vega Spectrum
+        # Get the spectrum of Vega
         r = requests.get(
             "https://raw.githubusercontent.com/bcarry/ska/main/data/lte096-4.0-0.5a%2B0.0.BT-NextGen.7.dat.csv"
         )
 
         with open(ska.PATH_VEGA, "w") as file:
+            file.write(r.text)
+
+        return True
+
+    except:
+        return False
+
+def download_mahlke_taxonomy():
+    """Download the template spectra of Mahlke+2022 taxonomy"""
+
+    print('taxo')
+    try:
+
+        # Get the spectrum of the Sun
+        r = requests.get(
+            "https://raw.githubusercontent.com/bcarry/ska/main/data/template_mahlke2022.csv"
+        )
+        with open(ska.PATH_MAHLKE, "w") as file:
             file.write(r.text)
 
         return True
