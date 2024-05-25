@@ -32,11 +32,19 @@ class Spectrum:
             if isinstance(input, pd.DataFrame):
                 self.from_dataframe(input)
 
+
+
+
     # --------------------------------------------------------------------------------
     def copy(self):
         from copy import deepcopy
 
         return deepcopy(self)
+
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+    # Spectrum from Input
 
     # --------------------------------------------------------------------------------
     def from_csv(self, file):
@@ -101,6 +109,28 @@ class Spectrum:
         if check_refl:
             self.Flux = np.array(df.loc[order, "Reflectance"].values)
             self.Reflectance = True
+
+
+    # --------------------------------------------------------------------------------
+    def from_taxonomy(self, type, mahlke2022=True):
+
+        # Read template spectra of Mahlke+2022 taxonomy
+        templates = pd.read_csv(ska.PATH_MAHLKE)
+
+        # Select the requested type
+        if type in templates.columns:
+            cols = ['feature', type] 
+            df = templates[cols]
+            df.columns = ['Wavelength', 'Reflectance']
+            self.from_dataframe(df)
+        else:
+            rich.print(f"[red]Type {type} not found in Mahlke+2022 taxonomy.[/red]")
+        
+
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+    # Color computation
 
     # --------------------------------------------------------------------------------
     def compute_color(self, filter1, filter2, phot_sys="Vega", vega=None):
