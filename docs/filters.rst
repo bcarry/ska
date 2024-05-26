@@ -56,7 +56,7 @@ facility, instrument, and band, can be easily retrieved with ``ska``.
           Pivot λ   : 2.152 (micron)
 
 
-  .. tab-item :: python
+  .. tab-item:: python
 
     The ``Filter`` class offers a simple way to access the basic information of a filter.
     It also contains a ``VOFilter`` attribute, which is a

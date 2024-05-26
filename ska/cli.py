@@ -33,25 +33,28 @@ def status(clear, update):
     from ska import cache
 
     # ------
-    # Check filter list
+    # Inventory of filters
     if not os.path.isfile(ska.PATH_FILTER_LIST):
         ska.svo.download_filter_list()
+    cached_filter_ids, cached_filter_xmls = cache.filter_inventory()
 
     # ------
-    # Echo inventory
-    cached_ids, cached_xmls = cache.take_inventory()
+    # Inventory of spectra
+    cached_spectra, cached_templates = cache.spectra_inventory()
 
     rich.print(
         f"""\nContents of {ska.PATH_CACHE}:
 
-        {len(cached_xmls)} filters\n"""
+        {len(cached_filter_xmls)} filters
+        {len(cached_spectra)} spectra
+        {len(cached_templates)} spectral template files"""
     )
-
-    # Update or clear
-    if cached_xmls:
+    
+    # Filters: Update or clear
+    if cached_filter_xmls:
         if not clear and not update:
             decision = prompt.Prompt.ask(
-                "Update or clear the cached filters and filter list?\n"
+                "\nUpdate or clear the cached [bright_cyan]filters and filter list[/bright_cyan]?\n"
                 "[blue][0][/blue] No "
                 "[blue][1][/blue] Clear cache "
                 "[blue][2][/blue] Update data ",
@@ -64,12 +67,37 @@ def status(clear, update):
 
         if clear or decision == "1":
             rich.print("\nClearing the cached filters and filter list..")
-            cache.clear()
+            cache.clear_filters()
 
         elif update or decision == "2":
-            rich.print(cached_ids)
+            rich.print(cached_filter_ids)
             rich.print("\nDownload filters from SVO Filter Service..")
-            cache.update_filters(cached_ids, force=True)
+            cache.update_filters(cached_filter_ids, force=True)
+
+
+    # Spectra: Update or clear
+    if cached_spectra or cached_templates:
+        if not clear and not update:
+            decision = prompt.Prompt.ask(
+                "\nUpdate or clear the cached [bright_cyan]spectra and templates[/bright_cyan]?\n"
+                "[blue][0][/blue] No "
+                "[blue][1][/blue] Clear cache "
+                "[blue][2][/blue] Update data ",
+                choices=["0", "1", "2"],
+                show_choices=False,
+                default="0",
+            )
+        else:
+            decision = "none"
+
+        if clear or decision == "1":
+            rich.print("\nClearing the cached spectra and templates..")
+            cache.clear_spectra()
+
+        elif update or decision == "2":
+            rich.print("\nUpdate spectra and templates..")
+            cache.download_sun_and_vega()
+            cache.download_mahlke_taxonomy()
 
 
 # --------------------------------------------------------------------------------
