@@ -74,8 +74,13 @@ frequently.
 ``ska`` relies extensively on the 
 `SVO Filter Profile Service <http://svo2.cab.inta-csic.es/svo/theory/fps3/index.php>`_
 for all the aspects related to filters (both the list and their properties).
-To speed up ``ska`` the filters are cached locally. It is recommended to
-update the cache regularly, by running the following command
+``ska`` also needs a reference spectrum of Vega
+(for :term:`Vega<Vega>` :term:`photometric system<Photometric system>`, see :ref:`how_it_works`), 
+and of the Sun (for solar colors), as well as templates
+for asteroids taxonomic classes.
+
+To speed up ``ska`` those files are cached locally. It is recommended to
+update the cache regularly, by running the following command:
 
 .. code-block:: bash
 
@@ -84,6 +89,8 @@ update the cache regularly, by running the following command
     Contents of /home/bcarry/.cache/ska:
 
             10 filters
+            2 spectra
+            1 spectral template files
 
     Update or clear the cached filters and filter list?
     [0] No [1] Clear cache [2] Update data  (0): 

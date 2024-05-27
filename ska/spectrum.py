@@ -20,9 +20,13 @@ class Spectrum:
 
         if "input" in locals():
 
-            # Initialize from a file
+            # Initialize from a str: file or a taxonomic class
             if isinstance(input, str):
-                self.from_csv(input)
+                
+                if os.path.isfile(input):
+                    self.from_csv(input)
+                else:
+                    self.from_taxonomy(input)
 
             # Initialize from a numpy.ndarray
             if isinstance(input, np.ndarray):
@@ -32,6 +36,9 @@ class Spectrum:
             if isinstance(input, pd.DataFrame):
                 self.from_dataframe(input)
 
+            # Initialize from a temperature (simple float or int) -> Blackbody
+            if isinstance(input, int) | isinstance(input, float):
+                self.from_blackbody(input)
 
 
 
@@ -112,7 +119,7 @@ class Spectrum:
 
 
     # --------------------------------------------------------------------------------
-    def from_taxonomy(self, type, mahlke2022=True):
+    def from_taxonomy(self, type):
 
         # Read template spectra of Mahlke+2022 taxonomy
         templates = pd.read_csv(ska.PATH_MAHLKE)
@@ -124,8 +131,21 @@ class Spectrum:
             df.columns = ['Wavelength', 'Reflectance']
             self.from_dataframe(df)
         else:
-            rich.print(f"[red]Type {type} not found in Mahlke+2022 taxonomy.[/red]")
+            rich.print(f"[red]Type[/red] [bright_cyan]{type}[/bright_cyan] [red]not found in Mahlke+2022 taxonomy.[/red]")
         
+
+    # --------------------------------------------------------------------------------
+    def from_blackbody(self, T):
+
+        from astropy.modeling.models import BlackBody
+        from astropy import units as u
+
+        # Blackbody function
+        bb = BlackBody(temperature=float(T)*u.K, scale=1.0 * u.erg / (u.s * (0.1*u.nm) * u.sr * u.cm**2) )
+        wave = np.linspace(0.05, 5, num=1000) * u.micron
+        flux = bb(wave)
+        self.from_numpy( np.array([wave.value,flux.value]).T )
+
 
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------

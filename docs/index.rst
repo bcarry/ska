@@ -82,6 +82,7 @@ from spectra.
   Home<self>
   Getting Started<getting_started>
   Dealing with filters<filters>
+  Handling spectra<spectra>
   Computing colors<colors>
   How does it work?<how_it_works>
   glossary
