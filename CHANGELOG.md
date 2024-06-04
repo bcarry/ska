@@ -12,5 +12,7 @@
 - Fix python requirement
 
 
-# 1.1.2 - 2024-06-04
-- Added "docs" command to the CLI 
+# 1.2 - 2024-06-04
+- Changed method "plot" into "plot-filter" in the CLI
+- Added method "plot-spectrum" to Spectrum object 
+- Added "docs" command to the CLI

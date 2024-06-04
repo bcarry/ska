@@ -49,9 +49,11 @@ In addition, you can now import the ``ska`` ``python`` package.
 
           Commands:
             color       Compute the color between two filters
+            docs        Open the ska documentation in browser.
             filter      Display the basic properties of the filter
             id          Fuzzy-search SVO filter index.
-            plot        Display the basic properties of the filter
+            plot-filter    Display a simple figure of the transmission of the filter
+            plot-spectrum  Display a simple figure of the spectrum
             solarcolor  Compute the color of the Sun between two filters
             status      Echo the status of the cached filters.
 

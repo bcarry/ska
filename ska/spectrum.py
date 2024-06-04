@@ -291,3 +291,68 @@ class Spectrum:
         return interp_spectrum.compute_color(
             filter1, filter2, phot_sys=phot_sys, vega=vega
         )
+
+
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+
+    # --------------------------------------------------------------------------------
+    # Plot spectrum
+    def plot(self, filters=None, figure=None, black=False):
+        """Create a plot of the spectrum.
+
+        Parameters
+        ----------
+        figure : str
+            Path to save a figure
+
+        Returns
+        -------
+        figure, axe
+            Matplotlib figure and axe
+        """
+
+        # Define figure
+        import matplotlib.pyplot as plt
+        if black:
+            plt.style.use("dark_background")
+        else:
+            plt.style.use("default")
+        fig, ax = plt.subplots()
+
+        # Plot transmission
+        ax.plot(self.Wavelength, self.Flux, label='Spectrum')
+
+        # Add filters
+        if filters is not None:
+            if isinstance(filters, ska.Filter):
+                filters = [filters]
+
+            for f in filters:
+
+                if isinstance(f, ska.Filter):
+                    filt = f
+                else:
+                    filt = ska.Filter(f)
+                    ax.plot(filt.wave, filt.trans, label=filt.id)
+
+        # Add labels
+        ax.set_xlabel("Wavelength (micron)")
+        if self.Reflectance:
+            ax.set_ylabel("Reflectance")
+        else:
+            ax.set_ylabel("Flux")
+        # ax.legend(loc="lower right")
+        fig.tight_layout()
+
+        # Save to file
+        if figure is not None:
+            fig.savefig(figure, dpi=180)
+
+        return fig, ax
+
+
+
+
+

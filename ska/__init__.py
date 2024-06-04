@@ -7,7 +7,7 @@ from .spectrum import Spectrum  # noqa
 from . import svo  # noqa
 from .cache import download_sun_and_vega, download_mahlke_taxonomy  # noqa
 
-__version__ = "1.1.1"
+__version__ = "1.2"
 
 # Cache location
 PATH_CACHE = os.path.join(os.path.expanduser("~"), ".cache/ska")
