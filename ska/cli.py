@@ -7,11 +7,25 @@ import rich
 import ska
 
 
+
+
+# --------------------------------------------------------------------------------
 @click.group()
 @click.version_option(version=ska.__version__, message="%(version)s")
 def cli_ska():
     """CLI for Spectral-Kit for Asteroids."""
     pass
+
+
+# --------------------------------------------------------------------------------
+# Open documentation in the browser
+@cli_ska.command()
+def docs():
+    """Open the ska documentation in browser."""
+    import webbrowser
+
+    webbrowser.open("https://space-ska.readthedocs.io/en/latest/", new=2)
+
 
 
 # --------------------------------------------------------------------------------
@@ -229,14 +243,42 @@ def filter(filter):
 @click.option(
     "--black", default=False, is_flag=True, help="Figure with a dark background"
 )
-def plot(filter, figure, black):
-    """Display the basic properties of the filter"""
-
+def plot_filter(filter, figure, black):
+    """Display a simple figure of the transmission of the filter"""
+    
     f = ska.Filter(filter)
 
     import matplotlib.pyplot as plt
 
-    fig, ax = f.plot_transmission(figure, black=black)
+    fig, ax = f.plot_transmission(figure=figure, black=black)
 
     if not "figure" in locals():
         plt.show()
+    elif figure is None:
+        plt.show()
+
+
+# --------------------------------------------------------------------------------
+# Plot filter transmission or spectrum (with filters)
+@cli_ska.command()
+@click.argument("spectrum")
+@click.option("--figure", default=None, help="Name of the figure")
+@click.option("--filter", '-f', default=None, help="Filter to overplot", multiple=True)
+@click.option(
+    "--black", default=False, is_flag=True, help="Figure with a dark background"
+)
+def plot_spectrum(spectrum, filter, figure, black):
+    """Display a simple figure of the spectrum"""
+
+    
+    s = ska.Spectrum(spectrum)
+
+    import matplotlib.pyplot as plt
+
+    fig, ax = s.plot(filters=list(filter), figure=figure, black=black)
+
+    if not "figure" in locals():
+        plt.show()
+    elif figure is None:
+        plt.show()
+

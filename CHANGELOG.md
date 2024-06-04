@@ -7,3 +7,12 @@
 - Spectrum object from templates
   - Classes from [Mahlke+2022](https://ui.adsabs.harvard.edu/abs/2022A&A...665A..26M/abstract)
   - Blackbody from temperature
+
+# 1.1.1 - 2024-05-27
+- Fix python requirement
+
+
+# 1.2 - 2024-06-04
+- Changed method "plot" into "plot-filter" in the CLI
+- Added method "plot-spectrum" to Spectrum object 
+- Added "docs" command to the CLI
