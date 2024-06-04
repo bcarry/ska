@@ -7,11 +7,25 @@ import rich
 import ska
 
 
+
+
+# --------------------------------------------------------------------------------
 @click.group()
 @click.version_option(version=ska.__version__, message="%(version)s")
 def cli_ska():
     """CLI for Spectral-Kit for Asteroids."""
     pass
+
+
+# --------------------------------------------------------------------------------
+# Open documentation in the browser
+@cli_ska.command()
+def docs():
+    """Open the rocks documentation in browser."""
+    import webbrowser
+
+    webbrowser.open("https://space-ska.readthedocs.io/en/latest/", new=2)
+
 
 
 # --------------------------------------------------------------------------------
