@@ -137,7 +137,7 @@ class Filter:
         # Interpolate over the transmission range
         interpol_transmission = np.interp(lambda_int, self.wave, self.trans)
 
-        interpol_spectrum = np.interp(lambda_int, spectrum.Wavelength, spectrum.Flux)
+        interpol_spectrum = np.interp(lambda_int, spectrum.wave, spectrum.flux)
 
         # Compute the flux by integrating over wavelength.
         nom = np.trapz(

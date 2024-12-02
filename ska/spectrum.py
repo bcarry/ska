@@ -14,9 +14,9 @@ class Spectrum:
         """Initiate a SKA spectrum class"""
 
         # Store attributes
-        self.Wavelength = None
-        self.Flux = None
-        self.Reflectance = False
+        self.wave = None
+        self.flux = None
+        self.is_refl = False
 
         if "input" in locals():
 
@@ -28,13 +28,13 @@ class Spectrum:
                 else:
                     self.from_taxonomy(input)
 
-            # Initialize from a numpy.ndarray
-            if isinstance(input, np.ndarray):
-                self.from_numpy(input)
-
             # Initialize from a pandas.DataFrame
             if isinstance(input, pd.DataFrame):
                 self.from_dataframe(input)
+
+            # Initialize from a numpy.ndarray
+            if isinstance(input, np.ndarray):
+                self.from_numpy(input)
 
             # Initialize from a temperature (simple float or int) -> Blackbody
             if isinstance(input, int) | isinstance(input, float):
@@ -42,6 +42,8 @@ class Spectrum:
 
     # --------------------------------------------------------------------------------
     def copy(self):
+        """Make a deepcopy of the SKA.Spectrum object."""
+
         from copy import deepcopy
 
         return deepcopy(self)
@@ -98,9 +100,9 @@ class Spectrum:
 
         # Store attributes
         order = np.argsort(arr[:, 0])
-        self.Wavelength = arr[order, 0]
-        self.Flux = arr[order, 1]
-        self.Reflectance = reflectance
+        self.wave = arr[order, 0]
+        self.flux = arr[order, 1]
+        self.is_refl = reflectance
 
     # --------------------------------------------------------------------------------
     def from_dataframe(self, df):
@@ -136,12 +138,12 @@ class Spectrum:
 
         # Store attributes
         order = np.argsort(df.Wavelength)
-        self.Wavelength = np.array(df.loc[order, "Wavelength"].values)
+        self.wave = np.array(df.loc[order, "Wavelength"].values)
         if check_flux:
-            self.Flux = np.array(df.loc[order, "Flux"].values)
+            self.flux = np.array(df.loc[order, "Flux"].values)
         if check_refl:
-            self.Flux = np.array(df.loc[order, "Reflectance"].values)
-            self.Reflectance = True
+            self.flux = np.array(df.loc[order, "Reflectance"].values)
+            self.is_refl = True
 
     # --------------------------------------------------------------------------------
     def from_taxonomy(self, type):
@@ -275,7 +277,7 @@ class Spectrum:
         """
 
         # Test if the input is a reflectance spectrum
-        if not self.Reflectance:
+        if not self.is_refl:
             rich.print(f"[red]Input spectrum is not a reflectance spectrum.[/red]")
 
         # Read spectrum of the Sun if not provided
@@ -283,12 +285,12 @@ class Spectrum:
             sun = ska.Spectrum(ska.PATH_SUN)
 
         # Interpolate spectrum of the Sun
-        interpol_spectrum = np.interp(self.Wavelength, sun.Wavelength, sun.Flux)
+        interpol_spectrum = np.interp(self.wave, sun.wave, sun.flux)
 
         # Mulitply reflectance by Solar spectrum
         spectrum = self.copy()
-        spectrum.Flux = self.Flux * interpol_spectrum
-        spectrum.Reflectance = False
+        spectrum.flux = self.flux * interpol_spectrum
+        spectrum.is_refl = False
         return spectrum
 
     # --------------------------------------------------------------------------------
@@ -342,12 +344,12 @@ class Spectrum:
             sun = ska.Spectrum(ska.PATH_SUN)
 
         # Interpolate spectrum of the Sun
-        interpol_spectrum = np.interp(lambda_int, sun.Wavelength, sun.Flux)
+        interpol_spectrum = np.interp(lambda_int, sun.wave, sun.flux)
         interp_sun = pd.DataFrame({"Wavelength": lambda_int, "Flux": interpol_spectrum})
         interp_sun = interp_sun.astype("float")
 
         # Interpolate reflectance spectrum
-        interpol_spectrum = np.interp(lambda_int, self.Wavelength, self.Flux)
+        interpol_spectrum = np.interp(lambda_int, self.wave, self.flux)
         interp_spectrum = ska.Spectrum(
             pd.DataFrame(
                 {"Wavelength": lambda_int, "Flux": interpol_spectrum * interp_sun.Flux}
@@ -392,7 +394,7 @@ class Spectrum:
         fig, ax = plt.subplots()
 
         # Plot transmission
-        ax.plot(self.Wavelength, self.Flux, label="Spectrum")
+        ax.plot(self.wave, self.flux, label="Spectrum")
 
         # Add filters
         if filters is not None:
@@ -409,7 +411,7 @@ class Spectrum:
 
         # Add labels
         ax.set_xlabel("Wavelength (micron)")
-        if self.Reflectance:
+        if self.is_refl:
             ax.set_ylabel("Reflectance")
         else:
             ax.set_ylabel("Flux")
