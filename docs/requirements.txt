@@ -55,3 +55,4 @@ sphinxcontrib-serializinghtml==1.1.10
 sphinx-hoverxref
 sphinx-copybutton
 furo==2024.1.29
+ska==2.0

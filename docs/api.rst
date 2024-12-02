@@ -24,7 +24,7 @@
 .. _api_filters: 
 
 :octicon:`archive;1em` Filters
-============================================
+==============================
 
 .. automodule:: filter
     :members:
@@ -32,7 +32,7 @@
     :show-inheritance:
 
 :octicon:`pulse;1em` Spectrum
-============================================
+=============================
 
 .. automodule:: spectrum
     :members:
@@ -41,7 +41,7 @@
 
 
 :octicon:`database;1em` SVO Tools
-============================================
+=================================
 
 .. automodule:: svo
     :members:
