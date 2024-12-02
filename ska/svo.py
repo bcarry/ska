@@ -9,8 +9,7 @@ import ska
 
 
 def download_filter_list():
-    """Retrieve the list of filter IDs from SVO Filter Service
-    http://svo2.cab.inta-csic.es/theory/fps/
+    """Retrieve the list of filter IDs from `SVO Filter Service <http://svo2.cab.inta-csic.es/theory/fps`__
 
     Returns
     =======
@@ -65,8 +64,7 @@ def load_filter_list():
 
 
 def download_filter(id, force=False):
-    """Download a filter VOTable from SVO Filter Service
-    http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice
+    """Download a filter VOTable from `SVO Filter Service <http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=voservice>`__
 
     Parameters
     ==========

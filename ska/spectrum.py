@@ -11,7 +11,7 @@ import ska
 class Spectrum:
     # --------------------------------------------------------------------------------
     def __init__(self, input=None):
-        """ """
+        """Initiate a SKA spectrum class"""
 
         # Store attributes
         self.Wavelength = None
@@ -22,7 +22,7 @@ class Spectrum:
 
             # Initialize from a str: file or a taxonomic class
             if isinstance(input, str):
-                
+
                 if os.path.isfile(input):
                     self.from_csv(input)
                 else:
@@ -40,8 +40,6 @@ class Spectrum:
             if isinstance(input, int) | isinstance(input, float):
                 self.from_blackbody(input)
 
-
-
     # --------------------------------------------------------------------------------
     def copy(self):
         from copy import deepcopy
@@ -55,6 +53,14 @@ class Spectrum:
 
     # --------------------------------------------------------------------------------
     def from_csv(self, file):
+        """Create a SKA spectrum from a CSV file.
+
+        Parameters
+        ----------
+        file : str
+            Path to a CSV file containing the spectrum
+        """
+
         if not os.path.isfile(file):
             rich.print(f"[red]Spectrum file {file} not found.[/red].")
             sys.exit(1)
@@ -70,6 +76,18 @@ class Spectrum:
 
     # --------------------------------------------------------------------------------
     def from_numpy(self, arr, reflectance=False):
+        """Create a SKA spectrum from a numpy array.
+
+        Parameters
+        ----------
+        arr : np.ndarray
+            A numpy array containing the spectrum. Columns must be
+            Wavelength (in micron), and either Flux or Reflectance.
+
+        reflectance : boolean
+            Set True if the input is a reflectance spectrum (default=False)
+        """
+
         if not isinstance(arr, np.ndarray):
             rich.print(f"[red]Input is not a numpy array.[/red]")
             sys.exit(1)
@@ -86,6 +104,14 @@ class Spectrum:
 
     # --------------------------------------------------------------------------------
     def from_dataframe(self, df):
+        """Create a SKA spectrum from a pandas DataFrame.
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            A DataFrame containing the spectrum. Columns must be
+            Wavelength (in micron), and either Flux or Reflectance.
+        """
 
         # Test Wavelength column
         check_wave = True
@@ -117,35 +143,51 @@ class Spectrum:
             self.Flux = np.array(df.loc[order, "Reflectance"].values)
             self.Reflectance = True
 
-
     # --------------------------------------------------------------------------------
     def from_taxonomy(self, type):
+        """Create a SKA reflectance spectrum from an asteroid template spectrum (Mahlke+2022 taxonomy).
+
+        Parameters
+        ----------
+        type : str
+            The name of the spectral type (A, B, C, D, E, K, L... V, Z)
+        """
 
         # Read template spectra of Mahlke+2022 taxonomy
         templates = pd.read_csv(ska.PATH_MAHLKE)
 
         # Select the requested type
         if type in templates.columns:
-            cols = ['feature', type] 
+            cols = ["feature", type]
             df = templates[cols]
-            df.columns = ['Wavelength', 'Reflectance']
+            df.columns = ["Wavelength", "Reflectance"]
             self.from_dataframe(df)
         else:
-            rich.print(f"[red]Type[/red] [bright_cyan]{type}[/bright_cyan] [red]not found in Mahlke+2022 taxonomy.[/red]")
-        
+            rich.print(
+                f"[red]Type[/red] [bright_cyan]{type}[/bright_cyan] [red]not found in Mahlke+2022 taxonomy.[/red]"
+            )
 
     # --------------------------------------------------------------------------------
     def from_blackbody(self, T):
+        """Create a SKA spectrum of a blackbody at temperature T.
+
+        Parameters
+        ----------
+        T : float
+            The temperature of the blackbody in Kelvin
+        """
 
         from astropy.modeling.models import BlackBody
         from astropy import units as u
 
         # Blackbody function
-        bb = BlackBody(temperature=float(T)*u.K, scale=1.0 * u.erg / (u.s * (0.1*u.nm) * u.sr * u.cm**2) )
+        bb = BlackBody(
+            temperature=float(T) * u.K,
+            scale=1.0 * u.erg / (u.s * (0.1 * u.nm) * u.sr * u.cm**2),
+        )
         wave = np.linspace(0.05, 5, num=1000) * u.micron
         flux = bb(wave)
-        self.from_numpy( np.array([wave.value,flux.value]).T )
-
+        self.from_numpy(np.array([wave.value, flux.value]).T)
 
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
@@ -153,14 +195,16 @@ class Spectrum:
     # Color computation
 
     # --------------------------------------------------------------------------------
-    def compute_color(self, filter1, filter2, phot_sys="Vega", vega=None):
+    def compute_color(self, id_filter_1, id_filter_2, phot_sys="Vega", vega=None):
         """Computes filter_1-filter_2 color of spectrum in the requested system.
 
         Parameters
         ==========
-        filter_1: ska.Filter
+        id_filter_1: ska.Filter or str
+            The first filter, a SKA Filter object of a filter unique ID (see SVO filter service)
 
-        filter_2: ska.Filter
+        id_filter_2: ska.Filter
+            The second filter, a SKA Filter object of a filter unique ID (see SVO filter service)
 
         phot_sys : str
             Photometric system in which to report the color (default=Vega)
@@ -174,15 +218,26 @@ class Spectrum:
             The requested color
         """
 
+        # Load Filters if provided as strings
+        if isinstance(id_filter_1, ska.Filter):
+            filter_1 = id_filter_1
+        else:
+            filter_1 = ska.Filter(id_filter_1)
+
+        if isinstance(id_filter_2, ska.Filter):
+            filter_2 = id_filter_2
+        else:
+            filter_2 = ska.Filter(id_filter_2)
+
         # Compute fluxes in each filter
-        flux1 = filter1.compute_flux(self)
-        flux2 = filter2.compute_flux(self)
+        flux1 = filter_1.compute_flux(self)
+        flux2 = filter_2.compute_flux(self)
 
         # Magnitude in AB photometric system
         if phot_sys == "AB":
             # Get Pivot wavelength for both filters
-            pivot_1 = filter1.VOFilter.get_field_by_id("WavelengthPivot").value
-            pivot_2 = filter2.VOFilter.get_field_by_id("WavelengthPivot").value
+            pivot_1 = filter_1.VOFilter.get_field_by_id("WavelengthPivot").value
+            pivot_2 = filter_2.VOFilter.get_field_by_id("WavelengthPivot").value
 
             # Compute and return the color
             return -2.5 * np.log10(flux1 / flux2) - 5 * np.log10(pivot_1 / pivot_2)
@@ -194,8 +249,8 @@ class Spectrum:
                 vega = ska.Spectrum(ska.PATH_VEGA)
 
             # Compute fluxes of Vega in each filter
-            flux1_vega = filter1.compute_flux(vega)
-            flux2_vega = filter2.compute_flux(vega)
+            flux1_vega = filter_1.compute_flux(vega)
+            flux2_vega = filter_2.compute_flux(vega)
 
             # Compute and return the color
             return -2.5 * (np.log10(flux1 / flux1_vega) - np.log10(flux2 / flux2_vega))
@@ -215,7 +270,7 @@ class Spectrum:
 
         Returns
         =======
-        ska.Spectrum
+        float
             A copy of the input Spectrum, in flux units
         """
 
@@ -238,15 +293,17 @@ class Spectrum:
 
     # --------------------------------------------------------------------------------
     def reflectance_to_color(
-        self, filter1, filter2, phot_sys="Vega", vega=None, sun=None
+        self, id_filter_1, id_filter_2, phot_sys="Vega", vega=None, sun=None
     ):
         """Computes filter_1-filter_2 color for a reflectance spectrum.
 
         Parameters
         ==========
-        filter_1: ska.Filter
+        id_filter_1: ska.Filter or str
+            The first filter, a SKA Filter object of a filter unique ID (see SVO filter service)
 
-        filter_2: ska.Filter
+        id_filter_2: ska.Filter
+            The second filter, a SKA Filter object of a filter unique ID (see SVO filter service)
 
         phot_sys : str
             Photometric system in which to report the color (default=Vega)
@@ -262,10 +319,20 @@ class Spectrum:
         float
             The requested color
         """
+        # Load Filters if provided as strings
+        if isinstance(id_filter_1, ska.Filter):
+            filter_1 = id_filter_1
+        else:
+            filter_1 = ska.Filter(id_filter_1)
+
+        if isinstance(id_filter_2, ska.Filter):
+            filter_2 = id_filter_2
+        else:
+            filter_2 = ska.Filter(id_filter_2)
 
         # Integration grid is built from the transmission curve
-        lambda_min = np.min([filter1.wave.min(), filter2.wave.min()])
-        lambda_max = np.max([filter1.wave.max(), filter2.wave.max()])
+        lambda_min = np.min([filter_1.wave.min(), filter_2.wave.min()])
+        lambda_max = np.max([filter_1.wave.max(), filter_2.wave.max()])
 
         # Wavelength range to integrate over
         lambda_int = np.arange(lambda_min, lambda_max, 0.0005)
@@ -289,9 +356,8 @@ class Spectrum:
 
         # Compute color of the reflectance*Sun spectrum
         return interp_spectrum.compute_color(
-            filter1, filter2, phot_sys=phot_sys, vega=vega
+            filter_1, filter_2, phot_sys=phot_sys, vega=vega
         )
-
 
     # --------------------------------------------------------------------------------
     # --------------------------------------------------------------------------------
@@ -307,6 +373,9 @@ class Spectrum:
         figure : str
             Path to save a figure
 
+        black : boolean
+            Set True to plot the transmission on a black background (default=False)
+
         Returns
         -------
         figure, axe
@@ -315,6 +384,7 @@ class Spectrum:
 
         # Define figure
         import matplotlib.pyplot as plt
+
         if black:
             plt.style.use("dark_background")
         else:
@@ -322,7 +392,7 @@ class Spectrum:
         fig, ax = plt.subplots()
 
         # Plot transmission
-        ax.plot(self.Wavelength, self.Flux, label='Spectrum')
+        ax.plot(self.Wavelength, self.Flux, label="Spectrum")
 
         # Add filters
         if filters is not None:
@@ -351,8 +421,3 @@ class Spectrum:
             fig.savefig(figure, dpi=180)
 
         return fig, ax
-
-
-
-
-

@@ -48,7 +48,7 @@ and the magnitude (with the Pogson definition) is computed as:
 .. math ::
     m(F) = -2.5\log\left(\overline{f_\lambda}\right) + \textrm{ZP}\left(\overline{f_\lambda}\right)
 
-where :term:`ZP<ZP>` is an offset, called the zero point of the photometric system. 
+where :term:`ZP<ZP>` is an offset, called the zero point of the :term:`photometric system<Photometric system>`. 
 There are several photometric systems, differing by their definition of the zero point.
 
 .. _work_Vega: 
@@ -114,7 +114,7 @@ where :math:`\overline{f_\nu}` is defined
     \overline{f_\nu} =  \frac{\int_\nu\,S_\nu\,T_\nu\,d\nu\,/\,\nu}
                           {\int_\nu\,T_\nu\,d\nu\,/\,\nu}
 
-It is often useful to consider the `pivot` wavelength
+It is often useful to consider the :term:`pivot wavelength<Pivot wavelength>`
 :math:`\lambda_p` to easily convert :math:`\overline{f_\nu}` into
 :math:`\overline{f_\lambda}` (knowing :math:`\lambda\nu = c` the speed of light):
 

@@ -12,12 +12,12 @@ import ska
 class Filter:
     # --------------------------------------------------------------------------------
     def __init__(self, id):
-        """Load a filter.
+        """Initiate a SKA filter class
 
         Parameters
         ----------
         id : str
-            The filter unique ID (see SVO filter service)
+            The filter unique ID (see `SVO Filter Service <http://svo2.cab.inta-csic.es/theory/fps`__)
         """
 
         # Test validity of filters
@@ -73,6 +73,18 @@ class Filter:
 
     # --------------------------------------------------------------------------------
     def display_summary(self):
+        """
+        Displays a summary of the filter's properties, including:
+
+        - Filter ID
+        - Facility (if available)
+        - Instrument (if available)
+        - Band (if available)
+        - Central wavelength in microns
+        - Full Width at Half Maximum (FWHM) in microns
+        - Pivot wavelength in microns
+        """
+
         import rich
 
         rich.print(f"\n[bright_cyan]Filter ID :[/bright_cyan] {self.id}")
@@ -102,9 +114,8 @@ class Filter:
 
         Parameters
         ----------
-        spectrum : pd.DataFrame
-            Wavelength: in Angstrom
-            Flux: Flux density (erg/cm2/s/ang)
+        spectrum : ska.Spectrum
+            The spectrum to compute the flux of
 
         Returns
         -------
@@ -143,13 +154,14 @@ class Filter:
 
         Parameters
         ==========
-        filter: str
-            The filter unique ID (see SVO filter service)
+        filter: ska.Filter or str
+            A SKA Filter object of a filter unique ID (see `SVO Filter Service <http://svo2.cab.inta-csic.es/theory/fps`__)
 
         phot_sys : str
             Photometric system in which to report the color (default=AB)
 
         vega : ska.Spectrum
+            The spectrum of Vega (default=None)
 
         Returns
         =======
@@ -199,6 +211,9 @@ class Filter:
         ----------
         figure : str
             Path to save a figure
+
+        black : boolean
+            Set True to plot the transmission on a black background (default=False)
 
         Returns
         -------

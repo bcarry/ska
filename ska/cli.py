@@ -7,8 +7,6 @@ import rich
 import ska
 
 
-
-
 # --------------------------------------------------------------------------------
 @click.group()
 @click.version_option(version=ska.__version__, message="%(version)s")
@@ -25,7 +23,6 @@ def docs():
     import webbrowser
 
     webbrowser.open("https://space-ska.readthedocs.io/en/latest/", new=2)
-
 
 
 # --------------------------------------------------------------------------------
@@ -63,7 +60,7 @@ def status(clear, update):
         {len(cached_spectra)} spectra
         {len(cached_templates)} spectral template files"""
     )
-    
+
     # Filters: Update or clear
     if cached_filter_xmls:
         if not clear and not update:
@@ -87,7 +84,6 @@ def status(clear, update):
             rich.print(cached_filter_ids)
             rich.print("\nDownload filters from SVO Filter Service..")
             cache.update_filters(cached_filter_ids, force=True)
-
 
     # Spectra: Update or clear
     if cached_spectra or cached_templates:
@@ -245,7 +241,7 @@ def filter(filter):
 )
 def plot_filter(filter, figure, black):
     """Display a simple figure of the transmission of the filter"""
-    
+
     f = ska.Filter(filter)
 
     import matplotlib.pyplot as plt
@@ -263,14 +259,13 @@ def plot_filter(filter, figure, black):
 @cli_ska.command()
 @click.argument("spectrum")
 @click.option("--figure", default=None, help="Name of the figure")
-@click.option("--filter", '-f', default=None, help="Filter to overplot", multiple=True)
+@click.option("--filter", "-f", default=None, help="Filter to overplot", multiple=True)
 @click.option(
     "--black", default=False, is_flag=True, help="Figure with a dark background"
 )
 def plot_spectrum(spectrum, filter, figure, black):
     """Display a simple figure of the spectrum"""
 
-    
     s = ska.Spectrum(spectrum)
 
     import matplotlib.pyplot as plt
@@ -281,4 +276,3 @@ def plot_spectrum(spectrum, filter, figure, black):
         plt.show()
     elif figure is None:
         plt.show()
-

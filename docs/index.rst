@@ -85,5 +85,6 @@ from spectra.
   Handling spectra<spectra>
   Computing colors<colors>
   How does it work?<how_it_works>
+  API<api>
   Release notes<releases>
   glossary
