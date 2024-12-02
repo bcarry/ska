@@ -106,14 +106,14 @@ def download_sun_and_vega():
 
         # Get the spectrum of the Sun
         r = requests.get(
-            "https://raw.githubusercontent.com/bcarry/ska/main/data/hst_sun.csv"
+            "https://raw.githubusercontent.com/bcarry/ska/main/data/e490_sun.csv"
         )
         with open(ska.PATH_SUN, "w") as file:
             file.write(r.text)
 
         # Get the spectrum of Vega
         r = requests.get(
-            "https://raw.githubusercontent.com/bcarry/ska/main/data/lte096-4.0-0.5a%2B0.0.BT-NextGen.7.dat.csv"
+            "https://raw.githubusercontent.com/bcarry/ska/main/data/vega_stis.csv"
         )
 
         with open(ska.PATH_VEGA, "w") as file:

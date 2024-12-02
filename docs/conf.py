@@ -23,7 +23,7 @@ copyright = "2024, Benoit Carry"
 author = "Benoit Carry"
 
 # The full version, including alpha/beta/rc tags
-release = "alpha"
+release = "1.3"
 html_title = "ska"
 
 

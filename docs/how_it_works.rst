@@ -97,9 +97,9 @@ close to the magnitude in the Vega system (i.e., close to 0):
 :octicon:`pulse;1em` The AB system
 ====================================
 
-The AB system was defined such as a source with constant flux :math:`f_\nu`
-(\textrm{erg}\cdot\textrm{cm}^{2}\cdot\textrm{s}^{-1}\cdot\textrm{Hz}^{-1}})`
-against frequency $\nu$ has a constant magnitude
+The AB system was defined such as a source with constant flux
+:math:`f_\nu (\textrm{erg}\cdot\textrm{cm}^{2}\cdot\textrm{s}^{-1}\cdot\textrm{Hz}^{-1})`
+against frequency :math:`\nu` has a constant magnitude
 regardless of the filter. Here again, the ZP is chosen to provide a
 magnitude in V close to that of Vega system:
 
@@ -122,4 +122,9 @@ It is often useful to consider the `pivot` wavelength
     \lambda_p^2 &=& \frac{\int_\lambda T_\lambda\,\lambda\,d\lambda}
                          {\int_\lambda T_\lambda\,d\lambda /\lambda}  \\
     \overline{f_\nu} &=& \frac{\lambda_p^2}{c} \overline{f_\lambda}
+
+Hence, the magnitude in the AB system can also be written as:
+
+.. math ::
+    m_{\textrm{AB}}(F) = -2.5\log\left(\overline{f_\lambda}\right) -2.5\log\left(\frac{\lambda_p^2}{c}\right) - 48.6
 

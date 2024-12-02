@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "space-ska"
-version = "1.2"
+version = "1.3"
 description = "Spectral-Kit for Asteroids"
 authors = ["Benoit Carry <benoit.carry@oca.eu>", "Max Mahlke"]
 license = "MIT"
@@ -20,8 +20,6 @@ furo = "^2022.9.15"
 sphinx-copybutton = "^0.5.0"
 sphinx_design = "^0.3.0"
 sphinx-hoverxref = "*"
-
-
 
 [tool.poetry.extras]
 docs = [
