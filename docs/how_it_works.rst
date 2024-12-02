@@ -82,8 +82,8 @@ of two other systems: ST et AB.
 ====================================
 
 The ST system was defined such as a source with a constant
-flux
-:math:`f_\lambda (\textrm{erg}\cdot\textrm{cm}^{2}\cdot\textrm{s}^{-1}\cdot\overset{\lower.5em\circ}{\mathrm{A}}^{-1})`
+flux density
+:math:`f_\lambda (\textrm{erg}\cdot\textrm{cm}^{-2}\cdot\textrm{s}^{-1}\cdot\overset{\lower.5em\circ}{\mathrm{A}}^{-1})`
 against wavelength :math:`\lambda` has a constant magnitude regardless of
 the filter. The zero point is chosen to provide a magnitude in V
 close to the magnitude in the Vega system (i.e., close to 0):
@@ -98,7 +98,7 @@ close to the magnitude in the Vega system (i.e., close to 0):
 ====================================
 
 The AB system was defined such as a source with constant flux
-:math:`f_\nu (\textrm{erg}\cdot\textrm{cm}^{2}\cdot\textrm{s}^{-1}\cdot\textrm{Hz}^{-1})`
+:math:`f_\nu (\textrm{erg}\cdot\textrm{cm}^{-2}\cdot\textrm{s}^{-1}\cdot\textrm{Hz}^{-1})`
 against frequency :math:`\nu` has a constant magnitude
 regardless of the filter. Here again, the ZP is chosen to provide a
 magnitude in V close to that of Vega system:
@@ -128,3 +128,22 @@ Hence, the magnitude in the AB system can also be written as:
 .. math ::
     m_{\textrm{AB}}(F) = -2.5\log\left(\overline{f_\lambda}\right) -2.5\log\left(\frac{\lambda_p^2}{c}\right) - 48.6
 
+
+.. _units: 
+
+:octicon:`info;1em` Units of spectral flux 
+==========================================
+
+The explanation here uses the non-`SI <https://en.wikipedia.org/wiki/International_System_of_Units>`_
+unit :math:`\textrm{erg}`, which corresponds
+to :math:`10^{-7} \textrm{J}`. It is the unit of energy in the
+`CGS <https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units>`_ system.
+The flux densities are often given in Janskys (:math:`\textrm{Jy}`) in astronomy, which is defined as:
+
+.. math ::
+    :nowrap:
+    
+    \begin{gather*}
+    1\ \textrm{Jy} = 10^{-23}\ \textrm{erg}\cdot\textrm{cm}^{-2}\cdot\textrm{s}^{-1}\cdot\textrm{Hz}^{-1}\\
+                   = 10^{-26}\ \textrm{W}\cdot\textrm{m}^{-2}\cdot\textrm{Hz}^{-1}
+    \end{gather*}
