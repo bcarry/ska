@@ -84,10 +84,9 @@ def download_filter(id, force=False):
     FILTERS = load_filter_list()
     if id not in FILTERS:
         rich.print(
-            f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] to list available filters"
+            f"[red]Unknown filter ID {id}[/red]. Use [green]ska id[/green] to list available filters"
         )
         sys.exit(1)
-        # raise ValueError(f"Unknown filter ID {id}. Use ska filter to list available filters")
 
     # SVO Base URL for queries
     url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"

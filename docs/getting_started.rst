@@ -26,7 +26,7 @@
 
    $ pip install space-ska
 
-The minimum version requirement for ``python`` is ``3.8``. After
+The minimum version requirement for ``python`` is ``3.11``. After
 installation, you have the ``ska`` executable available system-wide.
 In addition, you can now import the ``ska`` ``python`` package.
 

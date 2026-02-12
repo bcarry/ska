@@ -1,5 +1,15 @@
-# 1.0 - 2024-05-23
-- Initial release on PyPI
+# 2.1 - 2026-02-12
+- Loosen requirements on packages version
+- Change deprecated `numpy.trapz`
+
+# 1.2 - 2024-06-04
+- Changed method "plot" into "plot-filter" in the CLI
+- Added method "plot-spectrum" to Spectrum object 
+- Added "docs" command to the CLI
+
+
+# 1.1.1 - 2024-05-27
+- Fix python requirement
 
 # 1.1 - 2024-05-27
 - Cache handles Sun and Vega
@@ -8,11 +18,5 @@
   - Classes from [Mahlke+2022](https://ui.adsabs.harvard.edu/abs/2022A&A...665A..26M/abstract)
   - Blackbody from temperature
 
-# 1.1.1 - 2024-05-27
-- Fix python requirement
-
-
-# 1.2 - 2024-06-04
-- Changed method "plot" into "plot-filter" in the CLI
-- Added method "plot-spectrum" to Spectrum object 
-- Added "docs" command to the CLI
+# 1.0 - 2024-05-23
+- Initial release on PyPI

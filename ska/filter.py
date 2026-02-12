@@ -24,13 +24,13 @@ class Filter:
         FILTERS = ska.svo.load_filter_list()
         if id not in FILTERS:
             rich.print(
-                f"[red]Unknown filter ID {id}[/red]. Use [green]ska filter[/green] command to list available filters"
+                f"[red]Unknown filter ID {id}[/red]. Use [green]ska id[/green] command to list available filters"
             )
             sys.exit(1)
-            # raise ValueError(f"Unknown filter ID {id}. Use [green]ska filter[/green] to list available filters")
+            # raise ValueError(f"Unknown filter ID {id}. Use [green]ska id[/green] to list available filters")
 
         self.id = id
-        self.path = os.path.join(ska.PATH_CACHE, f"{self.id.replace('/','_')}.xml")
+        self.path = os.path.join(ska.PATH_CACHE, f"{self.id.replace('/', '_')}.xml")
 
         # Download if not cached
         if not os.path.isfile(self.path):
@@ -140,11 +140,11 @@ class Filter:
         interpol_spectrum = np.interp(lambda_int, spectrum.wave, spectrum.flux)
 
         # Compute the flux by integrating over wavelength.
-        nom = np.trapz(
+        nom = np.trapezoid(
             interpol_spectrum * interpol_transmission * factor,
             lambda_int,
         )
-        denom = np.trapz(interpol_transmission * factor, lambda_int)
+        denom = np.trapezoid(interpol_transmission * factor, lambda_int)
         flux = nom / denom
         return flux
 
