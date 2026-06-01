@@ -21,6 +21,11 @@
 
 |br|
 
+Release 2.2 -- *2026-06-01*
+===========================
+
+- URLs to SVO filter files have been updated to follow the evolution of SVO ecosystem
+
 Release 2.1 -- *2026-02-12*
 ===========================
 

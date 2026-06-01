@@ -21,14 +21,14 @@ def download_filter_list():
 
         # Main SVO filter list
         r = requests.get(
-            "https://svo.cab.inta-csic.es/files/svo/Public/HowTo/FPS/FPS_info.xml"
+            "https://svo.cab.inta-csic.es/wp-content/uploads/download/FPS_info.xml"
         )
         SVOFilters = parse(io.BytesIO(r.content))
         main_id = SVOFilters.get_first_table().to_table().to_pandas().filterID.to_list()
 
         # Secondary SVO filter list
         r = requests.get(
-            "https://svo.cab.inta-csic.es/files/svo/Public/HowTo/FPS/others.xml"
+            "https://svo.cab.inta-csic.es/wp-content/uploads/download/others.xml"
         )
         SVOFilters = parse(io.BytesIO(r.content))
         other_id = SVOFilters.get_first_table().to_table().to_pandas()["__ID"].to_list()
