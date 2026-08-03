@@ -21,6 +21,21 @@
 
 |br|
 
+Release 2.3 -- *2026-08-03*
+===========================
+
+- Allow the wavelength and flux (or reflectance) as distinct inputs for `Spectrum`
+
+- Allow the `reflectance` keyword to `Spectrum` to instantiate either flux or reflectance from lists or numpy arrays
+
+- Patched documentation for `solar_color` which is a method of `Filter`
+
+
+Release 2.2 -- *2026-06-01*
+===========================
+
+- URLs to SVO filter files have been updated to follow the evolution of SVO ecosystem
+
 Release 2.2 -- *2026-06-01*
 ===========================
 

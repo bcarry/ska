@@ -109,7 +109,7 @@ its colors from the spectrum itself (located at ``ska.PATH_SUN``).
       >>> from ska import Filter               # Class for filters
       >>> V = Filter("Generic/Johnson.V")      # Retrieve Johnson V filter
       >>> J = Filter("2MASS/2MASS.J")          # Retrieve 2MASS J filter
-      >>> sun.solar_color(V, J)
+      >>> V.solar_color(J)
       1.15
 
 |br|

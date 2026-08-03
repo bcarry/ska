@@ -10,7 +10,7 @@ import ska
 
 class Spectrum:
     # --------------------------------------------------------------------------------
-    def __init__(self, input=None):
+    def __init__(self, input=None, second=None, reflectance=False):
         """Initiate a SKA spectrum class"""
 
         # Store attributes
@@ -19,10 +19,8 @@ class Spectrum:
         self.is_refl = False
 
         if "input" in locals():
-
             # Initialize from a str: file or a taxonomic class
             if isinstance(input, str):
-
                 if os.path.isfile(input):
                     self.from_csv(input)
                 else:
@@ -33,8 +31,16 @@ class Spectrum:
                 self.from_dataframe(input)
 
             # Initialize from a numpy.ndarray
-            if isinstance(input, np.ndarray):
-                self.from_numpy(input)
+            if isinstance(input, np.ndarray) and second is None:
+                self.from_numpy(input, reflectance=reflectance)
+
+            # Initialize from two lists or np.array
+            if (
+                ("second" in locals())
+                & (isinstance(input, np.ndarray) | isinstance(input, list))
+                & (isinstance(second, np.ndarray) | isinstance(second, list))
+            ):
+                self.from_waveflux(input, second, reflectance=reflectance)
 
             # Initialize from a temperature (simple float or int) -> Blackbody
             if isinstance(input, int) | isinstance(input, float):
@@ -103,6 +109,42 @@ class Spectrum:
         self.wave = arr[order, 0]
         self.flux = arr[order, 1]
         self.is_refl = reflectance
+
+
+    # --------------------------------------------------------------------------------
+    def from_waveflux(self, wave, flux, reflectance=False):
+        """Create a SKA spectrum from two list/arrays of wavelength and flux
+
+        Parameters
+        ----------
+        wave : np.ndarray | list
+            A numpy array or list containing the wavelength in micron.
+        flux : np.ndarray | list
+            A numpy array or list containing the Flux or Reflectance.
+
+        reflectance : boolean
+            Set True if the input is a reflectance spectrum (default=False)
+        """
+
+        if (not isinstance(wave, np.ndarray)) & (not isinstance(wave, list)):
+            rich.print(f"[red]wave is not a list or numpy array.[/red]")
+            sys.exit(1)
+
+        if (not isinstance(flux, np.ndarray)) & (not isinstance(flux, list)):
+            rich.print(f"[red]flux is not a list or numpy array.[/red]")
+            sys.exit(1)
+
+        if len(wave) != len(flux):
+            rich.print(f"[red]Wave and flux of different lengths ({len(wave)} vs {len(flux)}).[/red]")
+            sys.exit(1)
+
+        # Store attributes
+        order = np.argsort(wave)
+        self.wave = np.array(wave)[order]
+        self.flux = np.array(flux)[order]
+        self.is_refl = reflectance
+
+
 
     # --------------------------------------------------------------------------------
     def from_dataframe(self, df):
@@ -402,7 +444,6 @@ class Spectrum:
                 filters = [filters]
 
             for f in filters:
-
                 if isinstance(f, ska.Filter):
                     filt = f
                 else:

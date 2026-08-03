@@ -49,7 +49,7 @@ In all cases, the ``Wavelength`` must be provided in :math:`\mu m`).
         >>> from ska import Spectrum         # Class for spectra
         >>> my_spect = Spectrum("sun.csv")   # Read and create Spectrum object
 
-  .. tab-item:: numpy array
+  .. tab-item:: 2d numpy array
 
     Create a ``Spectrum`` object from a simple 2d
     `numpy <https://numpy.org/>`_ array:
@@ -70,7 +70,26 @@ In all cases, the ``Wavelength`` must be provided in :math:`\mu m`).
        [2.99901507e+02, 2.94230000e-08],
        [2.99932098e+02, 2.93950000e-08]])
 
-       >>> my_spect = Spectrum( my_array )
+       >>> my_spect = Spectrum( my_array )  # Implicitely my_array contains fluxes
+       >>> my_spect = Spectrum( my_array, reflectance=True )  # For reflectances
+
+
+  .. tab-item:: arrays or lists
+
+    Create a ``Spectrum`` object from two lists/arrays:
+    the first containing the wavelength and
+    the second the flux or the reflectance.
+
+     .. code-block:: python
+
+       >>> from ska import Spectrum         # Class for spectra
+       >>> df = pd.read_csv( 'sun.csv')     # Store a spectrum in a DataFrame
+       >>> wave = df.Wavelength.to_list()   # list of wavelengths
+       >>> flux = df.Flux.to_list()         # list of flux (or reflectance)
+       
+       >>> my_spect = Spectrum( wave, flux )  # Implicitely my_array contains fluxes
+       >>> my_spect = Spectrum( wave, flux, reflectance=True )  # For reflectances
+
 
   .. tab-item:: pandas DataFrame
 

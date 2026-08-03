@@ -1,3 +1,11 @@
+# 2.3 - 2026-08-03
+- Allow the wavelength and flux (or reflectance) as distinct inputs for `Spectrum`
+- Allow the `reflectance` keyword to `Spectrum` to instantiate either flux or reflectance from lists or numpy arrays
+- Patched documentation for `solar_color` which is a method of `Filter`
+
+# 2.2 - 2026-06-01
+- Adapt to new data structure at SVO Filter Service
+
 # 2.1 - 2026-02-12
 - Loosen requirements on packages version
 - Change deprecated `numpy.trapz`
