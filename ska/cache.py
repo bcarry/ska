@@ -120,7 +120,8 @@ def download_sun_and_vega():
 
         return True
 
-    except:
+    except Exception as e:
+        print(f"Error occurred while downloading Sun and Vega spectra: {e}")
         return False
 
 
@@ -137,5 +138,6 @@ def download_mahlke_taxonomy():
 
         return True
 
-    except:
+    except Exception as e:
+        print(f"Error occurred while downloading Mahlke+2022 taxonomy: {e}")
         return False

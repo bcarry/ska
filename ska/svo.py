@@ -39,8 +39,9 @@ def download_filter_list():
                 file.write(f"{f}\n")
         return True
 
-    except:
-        rich.print(f"[red]Error downloading filter list from SVO[/red].")
+    except Exception as e:
+        rich.print("[red]Error downloading filter list from SVO[/red].")
+        rich.print(f"[red]Error:[/red] {e}")
         return False
 
 
@@ -98,14 +99,15 @@ def download_filter(id, force=False):
             # Request the filter VOTable
             r = requests.get(url, params={"ID": id})
             SVOFilter = parse(io.BytesIO(r.content))
-            filter_info = SVOFilter.get_first_table()
+            # filter_info = SVOFilter.get_first_table()
 
             # Write it to disk
             # os.makedirs(ska.PATH_CACHE, exist_ok=True)
             SVOFilter.to_xml(out)
 
-        except:
+        except Exception as e:
             rich.print(f"[red]Error downloading filter {id} VOTable[/red].")
+            rich.print(f"[red]Error:[/red] {e}")
             sys.exit(1)
 
     # Return path to filter VOTable
