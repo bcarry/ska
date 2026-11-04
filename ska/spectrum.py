@@ -110,7 +110,6 @@ class Spectrum:
         self.flux = arr[order, 1]
         self.is_refl = reflectance
 
-
     # --------------------------------------------------------------------------------
     def from_waveflux(self, wave, flux, reflectance=False):
         """Create a SKA spectrum from two list/arrays of wavelength and flux
@@ -135,7 +134,9 @@ class Spectrum:
             sys.exit(1)
 
         if len(wave) != len(flux):
-            rich.print(f"[red]Wave and flux of different lengths ({len(wave)} vs {len(flux)}).[/red]")
+            rich.print(
+                f"[red]Wave and flux of different lengths ({len(wave)} vs {len(flux)}).[/red]"
+            )
             sys.exit(1)
 
         # Store attributes
@@ -143,8 +144,6 @@ class Spectrum:
         self.wave = np.array(wave)[order]
         self.flux = np.array(flux)[order]
         self.is_refl = reflectance
-
-
 
     # --------------------------------------------------------------------------------
     def from_dataframe(self, df):

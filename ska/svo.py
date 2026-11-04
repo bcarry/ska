@@ -18,7 +18,6 @@ def download_filter_list():
     """
 
     try:
-
         # Main SVO filter list
         r = requests.get(
             "https://svo.cab.inta-csic.es/wp-content/uploads/download/FPS_info.xml"
