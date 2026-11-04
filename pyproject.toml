@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "space-ska"
-version = "2.3"
+version = "2.4"
 description = "Spectral-Kit for Asteroids"
 authors = ["Benoit Carry <benoit.carry@oca.eu>", "Max Mahlke"]
 license = "MIT"

@@ -103,7 +103,6 @@ def download_sun_and_vega():
     """Download the spectra of the Sun and Vega"""
 
     try:
-
         # Get the spectrum of the Sun
         r = requests.get(
             "https://raw.githubusercontent.com/bcarry/ska/main/data/e490_sun.csv"
@@ -121,7 +120,8 @@ def download_sun_and_vega():
 
         return True
 
-    except:
+    except Exception as e:
+        print(f"Error occurred while downloading Sun and Vega spectra: {e}")
         return False
 
 
@@ -129,7 +129,6 @@ def download_mahlke_taxonomy():
     """Download the template spectra of Mahlke+2022 taxonomy"""
 
     try:
-
         # Get the spectrum of the Sun
         r = requests.get(
             "https://raw.githubusercontent.com/bcarry/ska/main/data/template_mahlke2022.csv"
@@ -139,5 +138,6 @@ def download_mahlke_taxonomy():
 
         return True
 
-    except:
+    except Exception as e:
+        print(f"Error occurred while downloading Mahlke+2022 taxonomy: {e}")
         return False

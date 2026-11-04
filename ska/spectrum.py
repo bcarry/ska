@@ -76,8 +76,9 @@ class Spectrum:
         # Read spectrum
         try:
             spectrum = pd.read_csv(file)
-        except:
-            rich.print(f"[red]Cannot read spectrum file {file}.[/red].")
+        except Exception as e:
+            rich.print("[red]Cannot read spectrum file {file}.[/red].")
+            rich.print(f"[red]Error:[/red] {e}")
             sys.exit(1)
 
         self.from_dataframe(spectrum)
@@ -97,11 +98,11 @@ class Spectrum:
         """
 
         if not isinstance(arr, np.ndarray):
-            rich.print(f"[red]Input is not a numpy array.[/red]")
+            rich.print("[red]Input is not a numpy array.[/red]")
             sys.exit(1)
 
         if arr.shape[1] < 2:
-            rich.print(f"[red]Input array has less than 2 columns.[/red]")
+            rich.print("[red]Input array has less than 2 columns.[/red]")
             sys.exit(1)
 
         # Store attributes
@@ -109,7 +110,6 @@ class Spectrum:
         self.wave = arr[order, 0]
         self.flux = arr[order, 1]
         self.is_refl = reflectance
-
 
     # --------------------------------------------------------------------------------
     def from_waveflux(self, wave, flux, reflectance=False):
@@ -127,15 +127,17 @@ class Spectrum:
         """
 
         if (not isinstance(wave, np.ndarray)) & (not isinstance(wave, list)):
-            rich.print(f"[red]wave is not a list or numpy array.[/red]")
+            rich.print("[red]wave is not a list or numpy array.[/red]")
             sys.exit(1)
 
         if (not isinstance(flux, np.ndarray)) & (not isinstance(flux, list)):
-            rich.print(f"[red]flux is not a list or numpy array.[/red]")
+            rich.print("[red]flux is not a list or numpy array.[/red]")
             sys.exit(1)
 
         if len(wave) != len(flux):
-            rich.print(f"[red]Wave and flux of different lengths ({len(wave)} vs {len(flux)}).[/red]")
+            rich.print(
+                f"[red]Wave and flux of different lengths ({len(wave)} vs {len(flux)}).[/red]"
+            )
             sys.exit(1)
 
         # Store attributes
@@ -143,8 +145,6 @@ class Spectrum:
         self.wave = np.array(wave)[order]
         self.flux = np.array(flux)[order]
         self.is_refl = reflectance
-
-
 
     # --------------------------------------------------------------------------------
     def from_dataframe(self, df):
@@ -159,20 +159,20 @@ class Spectrum:
 
         # Test Wavelength column
         check_wave = True
-        if not "Wavelength" in df.columns:
+        if  "Wavelength" not in df.columns:
             check_wave = False
-            rich.print(f"[red]Column 'Wavelength' missing from input.[/red]")
+            rich.print("[red]Column 'Wavelength' missing from input.[/red]")
 
         # Test Flux or Reflectance column
         check_flux = True
         check_refl = True
-        if not "Flux" in df.columns:
+        if "Flux" not in df.columns:
             check_flux = False
-        if not "Reflectance" in df.columns:
+        if "Reflectance" not in df.columns:
             check_refl = False
 
         if not (check_flux | check_refl):
-            rich.print(f"[red]Column 'Flux' or 'Reflectance' missing from input.[/red]")
+            rich.print("[red]Column 'Flux' or 'Reflectance' missing from input.[/red]")
             sys.exit(1)
 
         if not (check_wave & (check_flux | check_refl)):
@@ -320,7 +320,7 @@ class Spectrum:
 
         # Test if the input is a reflectance spectrum
         if not self.is_refl:
-            rich.print(f"[red]Input spectrum is not a reflectance spectrum.[/red]")
+            rich.print("[red]Input spectrum is not a reflectance spectrum.[/red]")
 
         # Read spectrum of the Sun if not provided
         if not isinstance(sun, ska.Spectrum):

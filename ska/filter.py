@@ -58,17 +58,20 @@ class Filter:
 
         try:
             self.facility = self.VOFilter.get_field_by_id("Facility").value
-        except:
+        except Exception as e:
+            print(f"Error occurred while fetching facility: {e}")
             self.facility = None
 
         try:
             self.instrument = self.VOFilter.get_field_by_id("Instrument").value
-        except:
+        except Exception as e:
+            print(f"Error occurred while fetching instrument: {e}") 
             self.instrument = None
 
         try:
             self.band = self.VOFilter.get_field_by_id("Band").value
-        except:
+        except Exception as e:
+            print(f"Error occurred while fetching band: {e}")
             self.band = None
 
     # --------------------------------------------------------------------------------
@@ -187,7 +190,7 @@ class Filter:
         # Solar color in Vega photometric system
         elif phot_sys == "Vega":
             # Read Vega spectrum if not provided
-            if not "vega" in locals():
+            if  "vega" not in locals():
                 vega = ska.Spectrum(ska.PATH_VEGA)
             else:
                 if not isinstance(vega, ska.Spectrum):

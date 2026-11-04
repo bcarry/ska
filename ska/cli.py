@@ -177,8 +177,6 @@ def id():
 def color(file, filter1, filter2, phot_sys, reflectance):
     """Compute the color between two filters"""
 
-    import pandas as pd
-
     # TBD: interactive selection filters with fzf
 
     # Load filters
@@ -248,7 +246,7 @@ def plot_filter(filter, figure, black):
 
     fig, ax = f.plot_transmission(figure=figure, black=black)
 
-    if not "figure" in locals():
+    if "figure" not in locals():
         plt.show()
     elif figure is None:
         plt.show()
@@ -272,7 +270,7 @@ def plot_spectrum(spectrum, filter, figure, black):
 
     fig, ax = s.plot(filters=list(filter), figure=figure, black=black)
 
-    if not "figure" in locals():
+    if "figure" not in locals():
         plt.show()
     elif figure is None:
         plt.show()
