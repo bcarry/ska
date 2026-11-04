@@ -1,3 +1,7 @@
+# 2.4 - 2026-11-04
+- Changed based URL of SVO Filter service
+- Patched error message for the downloading of SVO list of filters
+
 # 2.3 - 2026-08-03
 - Allow the wavelength and flux (or reflectance) as distinct inputs for `Spectrum`
 - Allow the `reflectance` keyword to `Spectrum` to instantiate either flux or reflectance from lists or numpy arrays
@@ -14,7 +18,6 @@
 - Changed method "plot" into "plot-filter" in the CLI
 - Added method "plot-spectrum" to Spectrum object 
 - Added "docs" command to the CLI
-
 
 # 1.1.1 - 2024-05-27
 - Fix python requirement

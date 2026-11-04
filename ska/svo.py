@@ -41,8 +41,7 @@ def download_filter_list():
         return True
 
     except:
-        # raise Exception("Error downloading filter list")
-        rich.print(f"[red]Error downloading filter {id} VOTable[/red].")
+        rich.print(f"[red]Error downloading filter list from SVO[/red].")
         return False
 
 
@@ -89,7 +88,7 @@ def download_filter(id, force=False):
         sys.exit(1)
 
     # SVO Base URL for queries
-    url = f"http://svo2.cab.inta-csic.es/theory/fps3/fps.php?"
+    url = "http://svo2.cab.inta-csic.es/theory/fps/fps.php?"
 
     # Output name for the filter VOTable
     out = os.path.join(ska.PATH_CACHE, id.replace("/", "_") + ".xml")
@@ -109,7 +108,6 @@ def download_filter(id, force=False):
         except:
             rich.print(f"[red]Error downloading filter {id} VOTable[/red].")
             sys.exit(1)
-            # raise Exception("Error downloading filter VOTable")
 
     # Return path to filter VOTable
     return out

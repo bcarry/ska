@@ -19,11 +19,11 @@ sys.path.insert(0, os.path.abspath("../ska"))
 # -- Project information -----------------------------------------------------
 
 project = "ska"
-copyright = "2024, Benoit Carry"
+copyright = "2024-, Benoit Carry"
 author = "Benoit Carry"
 
 # The full version, including alpha/beta/rc tags
-release = "2.3"
+release = "2.4"
 html_title = "ska"
 
 
